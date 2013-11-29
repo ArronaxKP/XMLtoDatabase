@@ -1,5 +1,6 @@
 
 public class Coverage {
+	
 	public String ROOT = "//PolicyPeriod/PATransactions/Entry";
 	public String TransID;
 	public String PolicyPeriodID;
@@ -40,15 +41,5 @@ public class Coverage {
 	public String ContactID;
 	public String RoleID;
 	public String RoleName;
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

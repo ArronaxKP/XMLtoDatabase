@@ -1,5 +1,6 @@
 
 public class PolicyPeriod {
+	
 	public String ROOT = "//PolicyPeriod";
 	public String TransID; 
 	public String TransType;
@@ -46,4 +47,5 @@ public class PolicyPeriod {
 	public String AccountCreateUserLastName;
 	public String QuoteTierGroup;
 	public String QuoteTierScore;
+	
 }
