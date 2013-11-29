@@ -39,11 +39,16 @@ public class Parser {
 			ap.resetXPath();
 			vn.toElement(VTDNav.ROOT);
 		} catch (XPathParseException | XPathEvalException | NavException e) {
-			System.err.println("Error with the xpath parsing");
+			System.err.println("Error with the xpath parsing: "+xpath);
 			e.printStackTrace();
 		}
 		return result;
 
+	}
+
+	public void setRoot(String root) {
+		// TODO Change the ROOT
+		
 	}
 
 }
