@@ -9,7 +9,7 @@ public class PolicyPeriod {
 	public String CeateTime; 
 	public String CreditScore; 
 	public String CurrentPremExt;
-	public String EISEditEffectiveDateExt;
+	public String EISEditEffDate;
 	public String EISPolicyTermNumber;
 	public String FcraNotice; 
 	public String JobID; 
@@ -45,7 +45,7 @@ public class PolicyPeriod {
 	public String EmailAddress1;
 	public String AccountCreateUserFirstName;
 	public String AccountCreateUserLastName;
-	public String QuoteTierGroup;
-	public String QuoteTierScore;
+	public String QuoteTierGroupExt;
+	public String QuoteTierScoreExt;
 	
 }

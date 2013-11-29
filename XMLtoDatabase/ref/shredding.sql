@@ -180,7 +180,7 @@ BEGIN TRAN;
 	x.item.value('(PACost/Coverage/CovTerms/Entry/ValueTypeName)[1]', 'varchar(50)') AS ValueTypeName,
 	x.item.value('(PACost/Vehicle/ID/Value)[1]', 'bigint') AS VehID,
 	x.item.value('(PACost/Vehicle/FixedId/Value)[1]', 'bigint') AS FixedVehID,
-	x.item.value('(UpdateUser/ID/Value)[1]','bigint') AS UpdateUserID,
+	x.item.value('(UpdateUser/ID/Value)[1]','bigint'	) AS UpdateUserID,
 	x.item.value('(UpdateUser/Contact/ID/Value)[1]', 'bigint') AS ContactID,
 	x.item.value('(UpdateUser/Roles/Entry/Role/ID/Value)[1]', 'bigint') AS RoleID,
 	x.item.value('(UpdateUser/Roles/Entry/Role/Name)[1]', 'VARCHAR(60)') AS RoleName
