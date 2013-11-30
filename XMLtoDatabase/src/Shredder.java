@@ -227,6 +227,141 @@ public class Shredder {
 		ai.UpdateTime = parser.getValue("(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/UpdateTime)[1]");
 		
 		
+		/* PolicyDrivers */
+		PolicyDrivers pd = new PolicyDrivers();
+		parser.setRoot(pd.ROOT);
+		pd.TransID = null;
+		pd.PolicyPeriodID = null;
+		pd.AccountID = null;
+		pd.PolDriverID = parser.getValue("(ID/Value)[1]");
+		pd.BasedOnID = parser.getValue("(BasedOn/ID/Value)[1]");
+		pd.FixedID = parser.getValue("(FixedId/Value)[1]");
+		pd.CreateTime = parser.getValue("CreateTime[1]");
+		pd.Age = parser.getValue("Age[1]");
+		pd.AgeFirstLicensed = parser.getValue("AgeFirstLicensedExt[1]");
+		pd.AssocPrimVehID = parser.getValue("(AssociatedPrimaryVehicleExt/ID/Value)[1]");
+		pd.BIPointsExt = parser.getValue("BIPointsExt[1]");
+		pd.CMPPointsExt = parser.getValue("CMPPointsExt[1]");
+		pd.ColPointsExt = parser.getValue("ColPointsExt[1]");
+		pd.creditTierExt = parser.getValue("CreditTierExt[1]");
+		pd.CustPointsExt = parser.getValue("CustPointsExt[1]");
+		pd.LoanPointsExt = parser.getValue("LoanPointsExt[1]");
+		pd.MedPointsExt = parser.getValue("MedPointsExt[1]");
+		pd.PDPointsExt = parser.getValue("PDPointsExt[1]");
+		pd.PIPMDPointsExt = parser.getValue("PIPMDPointsExt[1]");
+		pd.PIPTXPointsExt = parser.getValue("PIPTXPointsExt[1]");
+		pd.RentPointsExt = parser.getValue("RentPointsExt[1]");
+		pd.UMBIPointsExt = parser.getValue("UMBIPointsExt[1]");
+		pd.UMPDPointsExt = parser.getValue("UMPDPointsExt[1]");
+		pd.DriverClassFactor = parser.getValue("DriverClassFactorExt[1]");
+		pd.Excluded = parser.getValue("Excluded[1]");
+		pd.DiscGoodStudent = parser.getValue("GoodStudentDiscountExt[1]");
+		pd.Education = parser.getValue("HighestLevelOfEducationExt[1]");
+		pd.FR19 = parser.getValue("Fr19Ext[1]");
+		pd.FR44 = parser.getValue("Fr44Ext[1]");
+		pd.LicenseNumber = parser.getValue("LicenseNumber[1]");
+		pd.LicenseState = parser.getValue("LicenseState[1]");
+		pd.LicenseStatus = parser.getValue("LicenseStatusExt[1]");
+		pd.MVROrdered = parser.getValue("MVROrderStatus[1]");
+		pd.MaritalExt = parser.getValue("MaritalExt[1]");
+		pd.OccupationGroup = parser.getValue("occupationGroupExt[1]");
+		pd.OccupationStatus = parser.getValue("OccupationStatusListExt[1]");
+		pd.OccupationTitle = parser.getValue("OccupationTitleExt[1]");
+		pd.Operator = parser.getValue("Operator[1]");
+		pd.PrimDrivPublicID = parser.getValue("PublicID[1]");
+		pd.RatedCreditTierExt = parser.getValue("RatedCreditTierExt[1]");
+		pd.RatingStatus = parser.getValue("RatingStatusExt[1]");
+		pd.Relationship = parser.getValue("RelationshipToInsuredExt[1]");
+		pd.SR22 = parser.getValue("Sr22Ext[1]");
+		pd.TrainingClassType = parser.getValue("TrainingClassType[1]");
+		pd.YearsLicensed = parser.getValue("YearsLicensedExt[1]");
+		pd.UpdateTime = parser.getValue("UpdateTime[1]");
+		pd.FirstName = parser.getValue("(FirstName)[1]");
+		pd.Gender = parser.getValue("(Gender)[1]");
+		pd.MiddleName = parser.getValue("(MiddleName)[1]");
+		pd.LastName = parser.getValue("(LastName)[1]");
+		pd.Suffix = parser.getValue("(Suffix)[1]");
+		pd.MaritalStatus = parser.getValue("(MaritalStatus)[1]");
+		
+		
+		/* AccountLocation */
+		AccountLocation al = new AccountLocation();
+		parser.setRoot(al.ROOT);
+		al.TransID = null;
+		al.PolicyPeriodID = null;
+		al.AccountID = null;
+		al.VehID = parser.getValue("(ID/Value)[1]");
+		al.FixedVehID = parser.getValue("(FixedId/Value)[1]");
+		al.AcctLocationID = parser.getValue("(AccountLocation/ID/Value)[1]");
+		al.AddressLine1 = parser.getValue("(AccountLocation/AddressLine1)[1]");
+		al.AddressLine2 = parser.getValue("(AccountLocation/AddressLine2)[1]");
+		al.AddressType = parser.getValue("(AddressType)[1]");
+		al.City = parser.getValue("(AccountLocation/City)[1]");
+		al.County = parser.getValue("(AccountLocation/County)[1]");
+		al.Country = parser.getValue("(AccountLocation/Country)[1]");
+		al.CreateTime = parser.getValue("(AccountLocation/CreateTime)[1]");
+		al.PhoneNumber = parser.getValue("(AccountLocation/Phone)[1]");
+		al.PostalCode = parser.getValue("(AccountLocation/PostalCode)[1]");
+		al.AcctAddPublicID = parser.getValue("(AccountLocation/PublicID)[1]");
+		al.State = parser.getValue("(AccountLocation/State)[1]");
+		al.UpdateTime = parser.getValue("(AccountLocation/UpdateTime)[1]");
+		
+		
+		/* PolicyAddress */
+		PolicyAddress pa = new PolicyAddress();
+		parser.setRoot(pa.ROOT);
+		pa.TransID = null;
+		pa.PolicyPeriodID = null;
+		pa.AccountID = null;
+		pa.PolAddressID = parser.getValue("(ID/Value)[1]");
+		pa.CreateTime = parser.getValue("(CreateTime)[1]");
+		pa.PolAddPublicID = parser.getValue("(PublicID)[1]");
+		pa.UpdateTime = parser.getValue("(UpdateTime)[1]");
+		pa.AddressLine1 = parser.getValue("(AddressLine1)[1]");
+		pa.AddressLine2 = parser.getValue("(AddressLine2)[1]");
+		pa.AddressLine3 = parser.getValue("(AddressLine3)[1]");
+		pa.City = parser.getValue("(City)[1]");
+		pa.County = parser.getValue("(County)[1]");
+		pa.PostalCode = parser.getValue("(PostalCode)[1]");
+		pa.State = parser.getValue("(State)[1]");
+		
+		
+		/* PolicyContact */
+		PolicyContact pc = new PolicyContact();
+		parser.setRoot(pc.ROOT);
+		pc.TransID = null;
+		pc.PolicyPeriodID = null;
+		pc.AccountID = null;
+		pc.PolicyContactRoleID = parser.getValue("(ID/Value)[1]");
+		pc.AcctContactRoleID = parser.getValue("(AccountContactRole/ID/Value)[1]");
+		pc.CreateTime = parser.getValue("(AccountContactRole/CreateTime)[1]");
+		pc.AcctContactRolePublicID = parser.getValue("(AccountContactRole/PublicID)[1]");
+		pc.UpdateTime = parser.getValue("(AccountContactRole/UpdateTime)[1]");
+		pc.AcctContactID = parser.getValue("(AccountContactRole/AccountContact/ID/Value)[1]");
+		pc.AddressLine1 = parser.getValue("(AccountContactRole/AccountContact/Contact/PrimaryAddress/AddressLine1)[1]");
+		pc.AddressLine2 = parser.getValue("(AccountContactRole/AccountContact/Contact/PrimaryAddress/AddressLine2)[1]");
+		pc.City = parser.getValue("(AccountContactRole/AccountContact/Contact/PrimaryAddress/City)[1]");
+		pc.PostalCode = parser.getValue("(AccountContactRole/AccountContact/Contact/PrimaryAddress/PostalCode)[1]");
+		pc.State = parser.getValue("(AccountContactRole/AccountContact/Contact/PrimaryAddress/State)[1]");
+		pc.ContactID = parser.getValue("(AccountContactRole/AccountContact/Contact/ID/Value)[1]");
+		pc.ContactCreateTime = parser.getValue("(AccountContactRole/AccountContact/Contact/CreateTime)[1]");
+		pc.HomePhone = parser.getValue("(AccountContactRole/AccountContact/Contact/HomePhone)[1]");
+		pc.ContactPublicID = parser.getValue("(AccountContactRole/AccountContact/Contact/PublicID)[1]");
+		pc.SSNOfficialID = parser.getValue("(AccountContactRole/AccountContact/Contact/SSNOfficialID)[1]");
+		pc.EmailAddress1 = parser.getValue("(AccountContactRole/AccountContact/Contact/EmailAddress1)[1]");
+		pc.LienholderName = parser.getValue("(AccountContactRole/AccountContact/Contact/Name)[1]");
+		pc.WorkPhone = parser.getValue("(AccountContactRole/AccountContact/Contact/WorkPhone)[1]");
+		pc.ContactUpdateTime = parser.getValue("(AccountContactRole/AccountContact/Contact/UpdateTime)[1]");
+		pc.DateOfBirth = parser.getValue("(AccountContactRole/AccountContact/Contact/entity-Person/DateOfBirth)[1]");
+		pc.FirstName = parser.getValue("(AccountContactRole/AccountContact/Contact/entity-Person/FirstName)[1]");
+		pc.Gender = parser.getValue("(AccountContactRole/AccountContact/Contact/entity-Person/Gender)[1]");
+		pc.MiddleName = parser.getValue("(AccountContactRole/AccountContact/Contact/entity-Person/MiddleName)[1]");
+		pc.LastName = parser.getValue("(AccountContactRole/AccountContact/Contact/entity-Person/LastName)[1]");
+		pc.Suffix = parser.getValue("(AccountContactRole/AccountContact/Contact/entity-Person/Suffix)[1]");
+		pc.CellPhone = parser.getValue("(AccountContactRole/AccountContact/Contact/entity-Person/CellPhone)[1]");
+		pc.MaritalStatus = parser.getValue("(AccountContactRole/AccountContact/Contact/entity-Person/MaritalStatus)[1]");
+			
+		
 		long end = System.currentTimeMillis();
 		System.out.println(end - start);
 	}

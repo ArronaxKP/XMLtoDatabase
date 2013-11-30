@@ -11,7 +11,8 @@ import com.ximpleware.XPathParseException;
 public class Parser {
 
 	private VTDGen vg;
-	private VTDNav vn;;
+	private VTDNav vn;
+	private String ROOT = "";
 
 	public Parser(String XML) {
 		try {
@@ -29,16 +30,22 @@ public class Parser {
 	public String getValue(String xpath) {
 		String result = null;
 		try {
-			AutoPilot ap = new AutoPilot();
-			ap.selectXPath(xpath);
-			ap.bind(vn);
-			while (ap.evalXPath() != -1) {
-				int text = vn.getText();
-				result = vn.toString(text);
+			if(ROOT != null){
+				AutoPilot rootPilot = new AutoPilot();
+				rootPilot.selectXPath(xpath);
+				rootPilot.bind(vn);
+				vn.toElement(rootPilot.evalXPath());
+				rootPilot.resetXPath();
+			} else {
+				vn.toElement(VTDNav.ROOT);
 			}
-			ap.resetXPath();
-			vn.toElement(VTDNav.ROOT);
-		} catch (XPathParseException | XPathEvalException | NavException e) {
+			
+			AutoPilot pilot = new AutoPilot();
+			pilot.selectXPath(xpath);
+			pilot.bind(vn);
+			result = pilot.evalXPathToString();
+			pilot.resetXPath();
+		} catch (XPathParseException | NavException | XPathEvalException e) {
 			System.err.println("Error with the xpath parsing: "+xpath);
 			e.printStackTrace();
 		}
@@ -46,9 +53,7 @@ public class Parser {
 
 	}
 
-	public void setRoot(String root) {
-		// TODO Change the ROOT
-		
+	public void setRoot(String ROOT) {
+		this.ROOT = ROOT;
 	}
-
 }
