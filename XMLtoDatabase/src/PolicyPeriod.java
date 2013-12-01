@@ -1,7 +1,7 @@
 
 public class PolicyPeriod {
-	
-	public String ROOT = "//PolicyPeriod";
+
+	public static String ROOT = "//PolicyPeriod";
 	public String TransID; 
 	public String TransType;
 	public String PPID; 

@@ -1,7 +1,7 @@
 
 public class Coverage {
 	
-	public String ROOT = "//PolicyPeriod/PATransactions/Entry";
+	public static String ROOT = "//PolicyPeriod/PATransactions/Entry";
 	public String TransID;
 	public String PolicyPeriodID;
 	public String AccountID;

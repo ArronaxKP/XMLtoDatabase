@@ -1,7 +1,7 @@
 
 public class PolicyContact {
 	
-	public String ROOT = "//PolicyPeriod/PolicyContactRoles/Entry";
+	public static final String ROOT = "//PolicyPeriod/PolicyContactRoles/Entry";
 	public String TransID;
 	public String PolicyPeriodID;
 	public String AccountID;

@@ -1,7 +1,7 @@
 
 public class Vehicle {
 	
-	public String ROOT = "//PolicyPeriod/PersonalAutoLine/Vehicles/Entry";
+	public static final String ROOT = "//PolicyPeriod/PersonalAutoLine/Vehicles/Entry";
 	public String TransID;
 	public String PolicyPeriodID;
 	public String AccountID;

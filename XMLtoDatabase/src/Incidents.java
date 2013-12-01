@@ -1,7 +1,7 @@
 
 public class Incidents {
 	
-	public String ROOT = "//PolicyPeriod/PersonalAutoLine/Incidents/Entry";
+	public static final String ROOT = "//PolicyPeriod/PersonalAutoLine/Incidents/Entry";
 	public String TransID;
 	public String PolicyPeriodID;
 	public String AccountID;
