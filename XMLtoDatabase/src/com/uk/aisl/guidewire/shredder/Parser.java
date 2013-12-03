@@ -29,8 +29,8 @@ public class Parser {
 		}
 	}
 
-	public XMLObject parseXML(XMLObject xml) {
-		ArrayList<Table> tables = xml.getTables();
+	public Database parseXML(Database database) {
+		ArrayList<Table> tables = database.getTables();
 		for (Table table : tables) {
 			try {
 				this.fillInTableValues(table);
@@ -39,7 +39,7 @@ public class Parser {
 				e.printStackTrace();
 			}
 		}
-		return xml;
+		return database;
 	}
 
 	private void fillInTableValues(Table table) throws XPathParseException, XPathEvalException, NavException {

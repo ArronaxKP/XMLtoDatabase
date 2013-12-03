@@ -2,10 +2,10 @@ package com.uk.aisl.guidewire.shredder;
 
 import java.util.ArrayList;
 
-public class XMLObject {
+public class Database {
 	private ArrayList<Table> tables;
 
-	public XMLObject() {
+	public Database() {
 		this.tables = new ArrayList<Table>();
 	}
 

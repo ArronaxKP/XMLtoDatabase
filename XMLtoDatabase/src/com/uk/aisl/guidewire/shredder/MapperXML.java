@@ -7,10 +7,10 @@ import com.ximpleware.VTDNav;
 import com.ximpleware.XPathEvalException;
 import com.ximpleware.XPathParseException;
 
-public class GodXML {
+public class MapperXML {
 
-	public static XMLObject parseGodXML(String path) {
-		XMLObject xml = new XMLObject();
+	public static Database parseMapperXML(String path) {
+		Database database = new Database();
 		VTDGen vg = new VTDGen();
 		if (vg.parseFile(path, false)) {
 			// parsing succeeded
@@ -23,7 +23,7 @@ public class GodXML {
 
 				int tableROOT = -1;
 				while ((tableROOT = ap.evalXPath()) != -1) {
-					xml.addTable(GodXML.fillInTable(tableROOT, vn));
+					database.addTable(MapperXML.fillInTable(tableROOT, vn));
 				}
 				ap.resetXPath();
 			} catch (XPathEvalException | NavException | XPathParseException e) {
@@ -32,9 +32,9 @@ public class GodXML {
 			}
 
 		} else {
-			xml = null;
+			database = null;
 		}
-		return xml;
+		return database;
 	}
 
 	private static Table fillInTable(int tableROOT, VTDNav vn) throws XPathParseException, XPathEvalException,
