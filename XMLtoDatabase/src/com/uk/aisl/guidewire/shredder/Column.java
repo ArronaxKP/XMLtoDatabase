@@ -39,9 +39,13 @@ public class Column {
 		this.values.add(value);
 	}
 
-	public ArrayList<String> getValues() {
-		ArrayList<String> tempValues = this.values;
-		this.values = null;
-		return tempValues;
+	public String getValue(int index) {
+		String tempValue = this.values.get(index);
+		this.values.set(index, null);
+		return tempValue;
+	}
+
+	public int size() {
+		return values.size();
 	}
 }
