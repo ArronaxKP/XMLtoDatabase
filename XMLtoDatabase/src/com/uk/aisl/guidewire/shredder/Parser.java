@@ -3,6 +3,7 @@ package com.uk.aisl.guidewire.shredder;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
+import com.uk.aisl.guidewire.shredder.exception.CrashException;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.ParseException;
@@ -16,7 +17,7 @@ public class Parser {
 	private VTDGen vg;
 	private VTDNav vn;
 
-	public Parser(String XML) {
+	public Parser(String XML) throws CrashException {
 		try {
 			String withHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + XML;
 			byte[] bytes = withHeader.getBytes("UTF-8");
@@ -24,19 +25,24 @@ public class Parser {
 			vg.setDoc(bytes);
 			vg.parse(false);
 			vn = vg.getNav();
-		} catch (UnsupportedEncodingException | ParseException e) {
-			System.err.println("UTF-8 is the only encoding supported currently.");
+		} catch (UnsupportedEncodingException e) {
+			throw new CrashException("UTF-8 is the only encoding supported currently.", e);
+		} catch (ParseException e) {
+			throw new CrashException("Parsing error occured parsing XML", XML, e);
 		}
 	}
 
-	public Database parseXML(Database database) {
+	public Database parseXML(Database database) throws CrashException {
 		ArrayList<Table> tables = database.getTables();
 		for (Table table : tables) {
 			try {
 				this.fillInTableValues(table);
-			} catch (XPathParseException | XPathEvalException | NavException e) {
-				System.err.println("Error filling in the table");
-				e.printStackTrace();
+			} catch (XPathEvalException e) {
+				throw new CrashException("Failed xpath for payloadXML", e);
+			} catch (NavException e) {
+				throw new CrashException("VTD-XML navigation failure parsing payloadXML", e);
+			} catch (XPathParseException e) {
+				throw new CrashException("Failed to parse the payloadXML", e);
 			}
 		}
 		return database;

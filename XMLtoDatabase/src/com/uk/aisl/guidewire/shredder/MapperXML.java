@@ -1,5 +1,6 @@
 package com.uk.aisl.guidewire.shredder;
 
+import com.uk.aisl.guidewire.shredder.exception.CrashException;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.VTDGen;
@@ -9,7 +10,7 @@ import com.ximpleware.XPathParseException;
 
 public class MapperXML {
 
-	public static Database parseMapperXML(String path) {
+	public static Database parseMapperXML(String path) throws CrashException {
 		Database database = new Database();
 		VTDGen vg = new VTDGen();
 		if (vg.parseFile(path, false)) {
@@ -26,13 +27,16 @@ public class MapperXML {
 					database.addTable(MapperXML.fillInTable(tableROOT, vn));
 				}
 				ap.resetXPath();
-			} catch (XPathEvalException | NavException | XPathParseException e) {
-				System.err.println("Failed to parse the table of GodXML");
-				e.printStackTrace();
+			} catch (XPathEvalException e) {
+				throw new CrashException("Failed xpath for MapperXML", e);
+			} catch (NavException e) {
+				throw new CrashException("VTD-XML navigation failure parsing MapperXML", e);
+			} catch (XPathParseException e) {
+				throw new CrashException("Failed to parse the table of MapperXML", e);
 			}
 
 		} else {
-			database = null;
+			throw new CrashException("VTD-XML failed to parse the MapperXML. Is the Path correct: " + path);
 		}
 		return database;
 	}
