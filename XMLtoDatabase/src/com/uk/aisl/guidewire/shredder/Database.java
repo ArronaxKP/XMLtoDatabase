@@ -3,6 +3,7 @@ package com.uk.aisl.guidewire.shredder;
 import java.util.ArrayList;
 
 public class Database {
+
 	private ArrayList<Table> tables;
 
 	public Database() {
