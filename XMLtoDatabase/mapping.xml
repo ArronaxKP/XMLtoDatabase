@@ -36,11 +36,11 @@
 		</lookupfield>
 		<lookupfield>
 			<key>policyperiodid</key>
-			<xpath>//PolicyPeriod/ID/Value[1]</xpath>
+			<xpath>//PolicyPeriod/ID/Value</xpath>
 		</lookupfield>
 		<lookupfield>
 			<key>accountid</key>
-			<xpath>//PolicyPeriod/Policy/Account/ID/Value[1]</xpath>
+			<xpath>//PolicyPeriod/Policy/Account/ID/Value</xpath>
 		</lookupfield>
 		<table>
 			<name>PolicyPeriod</name>

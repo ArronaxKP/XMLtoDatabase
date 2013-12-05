@@ -1,7 +1,5 @@
 package com.uk.aisl.guidewire.shredder;
 
-import java.util.ArrayList;
-
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
@@ -46,8 +44,6 @@ public class MapperXML {
 
 	private static Database fillInLookUps(Database database, VTDNav vn) throws XPathParseException, XPathEvalException, NavException {
 		
-		ArrayList<String> keys = new ArrayList<String>();
-		ArrayList<String> xpath = new ArrayList<String>();
 		
 		AutoPilot ap = new AutoPilot();
 		ap.selectXPath("//shredder/database/lookupfield");
@@ -65,46 +61,22 @@ public class MapperXML {
 			apValue.bind(vn);
 			String value = apValue.evalXPathToString();
 			apValue.resetXPath();
-			
-			boolean addKey = true;
-			
-			if(value == null || value.equals("")) {
 				
-				AutoPilot apXpath = new AutoPilot();
-				apXpath.selectXPath("xpath");
-				apXpath.bind(vn);
-				value = apXpath.evalXPathToString();
-				apXpath.resetXPath();
-				
-				if(value == null || value.equals("")) {
-					AutoPilot apVariable = new AutoPilot();
-					apVariable.selectXPath("variable");
-					apVariable.bind(vn);
-					value = apVariable.evalXPathToString();
-					apVariable.resetXPath();
-					//Stubbed TODO
-					value = "Need to map database values";
-				} else {
-					addKey = false;
-					keys.add(key);
-					xpath.add(value);
-				}
-			}
-			if(addKey){
-				database.addLookUpValue(key, value);
-			}
-		}
-		
-		ap.resetXPath();
-		vn.toElement(VTDNav.ROOT);
-		
-		for(int i = 0; i < keys.size(); i++){
 			AutoPilot apXpath = new AutoPilot();
-			apXpath.selectXPath(xpath.get(i));
+			apXpath.selectXPath("xpath");
 			apXpath.bind(vn);
-			String value = apXpath.evalXPathToString();
+			String xpath = apXpath.evalXPathToString();
 			apXpath.resetXPath();
-			database.addLookUpValue(keys.get(i), value);
+			
+			AutoPilot apVariable = new AutoPilot();
+			apVariable.selectXPath("variable");
+			apVariable.bind(vn);
+			String variable = apVariable.evalXPathToString();
+			apVariable.resetXPath();
+			//Stubbed TODO
+			value = "Need to map database variables "+variable;
+			
+			database.addLookUpValue(key, new LookUp(xpath, value));
 		}
 		
 		return database;

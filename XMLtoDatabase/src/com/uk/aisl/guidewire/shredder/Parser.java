@@ -37,6 +37,7 @@ public class Parser {
 		for (Table table : tables) {
 			try {
 				this.fillInTableValues(database, table);
+				this.fillInLookUpValues(database);
 			} catch (XPathEvalException e) {
 				throw new CrashException("Failed xpath for payloadXML", e);
 			} catch (NavException e) {
@@ -48,7 +49,31 @@ public class Parser {
 		return database;
 	}
 
+	private void fillInLookUpValues(Database database) throws XPathParseException, NavException {
+		vn.toElement(VTDNav.ROOT);
+		ArrayList<String> lookUpKeys = database.getLookUpKeys();
+		int totalLookUps = lookUpKeys.size();
+		for(int i = 0; i < totalLookUps; i++){
+			String value = database.getLookUpValue(lookUpKeys.get(i));
+			if(value == null || value.equals("")) {
+				String xpath = database.getLookUpXpath(lookUpKeys.get(i));
+				if(xpath == null || xpath.equals("")) {
+					value = "";//TODO assign variable
+				} else {
+					AutoPilot apXpath = new AutoPilot();
+					apXpath.selectXPath(database.getLookUpXpath(lookUpKeys.get(i)));
+					apXpath.bind(vn);
+					value = apXpath.evalXPathToString();
+					apXpath.resetXPath();
+					
+				}
+			}
+			database.setLookUpValue(lookUpKeys.get(i), value);
+		}
+	}
+
 	private void fillInTableValues(Database database, Table table) throws XPathParseException, XPathEvalException, NavException {
+		vn.toElement(VTDNav.ROOT);
 		AutoPilot ap = new AutoPilot();
 		ap.selectXPath(table.getXpathROOT());
 		ap.bind(vn);
