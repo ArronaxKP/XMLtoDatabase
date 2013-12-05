@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shredder>
-	<database>
+	<!-- <database>
 		<type>Source</type>
 		<servername></servername>
 		<databasename></databasename>
@@ -20,15 +20,39 @@
 				<type>int</type>
 			</column>
 		</table>
-	</database>
+	</database> -->
 	<database>
 		<type>Destination</type>
 		<servername></servername>
 		<databasename></databasename>
 		<port></port>
+		<lookupfield>
+			<key>transid</key>
+			<variable>transid</variable>
+		</lookupfield>
+		<lookupfield>
+			<key>type</key>
+			<variable>type</variable>
+		</lookupfield>
+		<lookupfield>
+			<key>policyperiodid</key>
+			<xpath>//PolicyPeriod/ID/Value[1]</xpath>
+		</lookupfield>
+		<lookupfield>
+			<key>accountid</key>
+			<xpath>//PolicyPeriod/Policy/Account/ID/Value[1]</xpath>
+		</lookupfield>
 		<table>
 			<name>PolicyPeriod</name>
 			<rootxpath>//PolicyPeriod</rootxpath>
+			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>Type</name>
+				<lookup>type</lookup>
+			</column>
 			<column>
 				<name>PPID</name>
 				<xpath>(ID/Value)[1]</xpath>
@@ -198,6 +222,20 @@
 			<name>Coverage</name>
 			<rootxpath>//PolicyPeriod/PATransactions/Entry</rootxpath>
 			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>PolicyPeriodID</name>
+				<lookup>policyperiodid</lookup>
+			</column>
+			<column>
+				<name>AccountID</name>
+				<lookup>accountid</lookup>
+			</column>
+			<name>Coverage</name>
+			<rootxpath>//PolicyPeriod/PATransactions/Entry</rootxpath>
+			<column>
 				<name>PATransID</name>
 				<xpath>(ID/Value)[1]</xpath>
 			</column>
@@ -345,6 +383,18 @@
 		<table>
 			<name>PersonalAutoLine</name>
 			<rootxpath>//PolicyPeriod/PersonalAutoLine</rootxpath>
+			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>PolicyPeriodID</name>
+				<lookup>policyperiodid</lookup>
+			</column>
+			<column>
+				<name>AccountID</name>
+				<lookup>accountid</lookup>
+			</column>
 			<column>
 				<name>PALineID</name>
 				<xpath>(ID/Value)[1]</xpath>
@@ -522,6 +572,18 @@
 			<name>Incidents</name>
 			<rootxpath>//PolicyPeriod/PersonalAutoLine/Incidents/Entry</rootxpath>
 			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>PolicyPeriodID</name>
+				<lookup>policyperiodid</lookup>
+			</column>
+			<column>
+				<name>AccountID</name>
+				<lookup>accountid</lookup>
+			</column>
+			<column>
 				<name>IncidentID</name>
 				<xpath>(ID/Value)[1]</xpath>
 			</column>
@@ -577,6 +639,18 @@
 		<table>
 			<name>Vehicle</name>
 			<rootxpath>//PolicyPeriod/PersonalAutoLine/Vehicles/Entry</rootxpath>
+			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>PolicyPeriodID</name>
+				<lookup>policyperiodid</lookup>
+			</column>
+			<column>
+				<name>AccountID</name>
+				<lookup>accountid</lookup>
+			</column>
 			<column>
 				<name>VehID</name>
 				<xpath>(ID/Value)[1]</xpath>
@@ -692,7 +766,19 @@
 		</table>
 		<table>
 			<name>AdditionalInterests</name>
-			<rootxpath>//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry</rootxpath>	
+			<rootxpath>//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry</rootxpath>
+			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>PolicyPeriodID</name>
+				<lookup>policyperiodid</lookup>
+			</column>
+			<column>
+				<name>AccountID</name>
+				<lookup>accountid</lookup>
+			</column>	
 			<column>
 				<name>VehID</name>
 				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/ID/Value)[1]</xpath>
@@ -737,6 +823,18 @@
 		<table>
 			<name>PolicyDrivers</name>
 			<rootxpath>//PolicyPeriod/PersonalAutoLine/PolicyDrivers/Entry</rootxpath>	
+			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>PolicyPeriodID</name>
+				<lookup>policyperiodid</lookup>
+			</column>
+			<column>
+				<name>AccountID</name>
+				<lookup>accountid</lookup>
+			</column>
 			<column>
 				<name>PolDriverID</name>
 				<xpath>(ID/Value)[1]</xpath>
@@ -938,6 +1036,18 @@
 			<name>AccountLocation</name>
 			<rootxpath>//PolicyPeriod/PersonalAutoLine/Vehicles/Entry</rootxpath>	
 			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>PolicyPeriodID</name>
+				<lookup>policyperiodid</lookup>
+			</column>
+			<column>
+				<name>AccountID</name>
+				<lookup>accountid</lookup>
+			</column>
+			<column>
 				<name>VehID</name>
 				<xpath>(ID/Value)[1]</xpath>
 			</column>	
@@ -1002,6 +1112,18 @@
 			<name>PolicyAddress</name>
 			<rootxpath>//PolicyPeriod/PolicyAddress</rootxpath>	
 			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>PolicyPeriodID</name>
+				<lookup>policyperiodid</lookup>
+			</column>
+			<column>
+				<name>AccountID</name>
+				<lookup>accountid</lookup>
+			</column>
+			<column>
 				<name>PolAddressID</name>
 				<xpath>(ID/Value)[1]</xpath>
 			</column>	
@@ -1049,6 +1171,18 @@
 		<table>	
 			<name>PolicyContact</name>
 			<rootxpath>//PolicyPeriod/PolicyContactRoles/Entry</rootxpath>	
+			<column>
+				<name>TransID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>PolicyPeriodID</name>
+				<lookup>policyperiodid</lookup>
+			</column>
+			<column>
+				<name>AccountID</name>
+				<lookup>accountid</lookup>
+			</column>
 			<column>
 				<name>PolicyContactRoleID</name>
 				<xpath>(ID/Value)[1]</xpath>

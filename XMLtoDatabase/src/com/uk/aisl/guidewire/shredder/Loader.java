@@ -5,9 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 import com.na.aisl.db.ConnectionManager;
 import com.uk.aisl.guidewire.shredder.exception.CrashException;

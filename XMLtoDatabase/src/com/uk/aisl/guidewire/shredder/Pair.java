@@ -1,7 +1,5 @@
 package com.uk.aisl.guidewire.shredder;
 
-import java.util.ArrayList;
-
 public class Pair<T, U> {
 	
 	private T first;

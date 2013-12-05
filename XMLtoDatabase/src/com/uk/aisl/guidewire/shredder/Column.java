@@ -7,6 +7,7 @@ public class Column {
 	private String xpath;
 	private String type;
 	private ArrayList<String> values;
+	private String lookUpKey;
 
 	public String getColumnName() {
 		return columnName;
@@ -47,5 +48,13 @@ public class Column {
 
 	public int size() {
 		return values.size();
+	}
+
+	public String getLookUpKey() {
+		return this.lookUpKey;
+	}
+	
+	public void setLookUpKey(String lookUpKey) {
+		this.lookUpKey = lookUpKey;
 	}
 }

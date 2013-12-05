@@ -1,5 +1,7 @@
 package com.uk.aisl.guidewire.shredder;
 
+import java.util.ArrayList;
+
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
@@ -17,14 +19,15 @@ public class MapperXML {
 			// parsing succeeded
 			try {
 				VTDNav vn = vg.getNav();
-
+				
+				database = MapperXML.fillInLookUps(database, vn);
+				//needs some work
 				AutoPilot ap = new AutoPilot();
-				ap.selectXPath("//shredder/table");
+				ap.selectXPath("//shredder/database/table");
 				ap.bind(vn);
 
-				int tableROOT = -1;
-				while ((tableROOT = ap.evalXPath()) != -1) {
-					database.addTable(MapperXML.fillInTable(tableROOT, vn));
+				while (ap.evalXPath() != -1) {
+					database.addTable(MapperXML.fillInTable(vn));
 				}
 				ap.resetXPath();
 			} catch (XPathEvalException e) {
@@ -41,7 +44,73 @@ public class MapperXML {
 		return database;
 	}
 
-	private static Table fillInTable(int tableROOT, VTDNav vn) throws XPathParseException, XPathEvalException,
+	private static Database fillInLookUps(Database database, VTDNav vn) throws XPathParseException, XPathEvalException, NavException {
+		
+		ArrayList<String> keys = new ArrayList<String>();
+		ArrayList<String> xpath = new ArrayList<String>();
+		
+		AutoPilot ap = new AutoPilot();
+		ap.selectXPath("//shredder/database/lookupfield");
+		ap.bind(vn);
+		
+		while (ap.evalXPath() != -1) {
+			AutoPilot apKey = new AutoPilot();
+			apKey.selectXPath("key");
+			apKey.bind(vn);
+			String key = apKey.evalXPathToString();
+			apKey.resetXPath();
+			
+			AutoPilot apValue = new AutoPilot();
+			apValue.selectXPath("value");
+			apValue.bind(vn);
+			String value = apValue.evalXPathToString();
+			apValue.resetXPath();
+			
+			boolean addKey = true;
+			
+			if(value == null || value.equals("")) {
+				
+				AutoPilot apXpath = new AutoPilot();
+				apXpath.selectXPath("xpath");
+				apXpath.bind(vn);
+				value = apXpath.evalXPathToString();
+				apXpath.resetXPath();
+				
+				if(value == null || value.equals("")) {
+					AutoPilot apVariable = new AutoPilot();
+					apVariable.selectXPath("variable");
+					apVariable.bind(vn);
+					value = apVariable.evalXPathToString();
+					apVariable.resetXPath();
+					//Stubbed TODO
+					value = "Need to map database values";
+				} else {
+					addKey = false;
+					keys.add(key);
+					xpath.add(value);
+				}
+			}
+			if(addKey){
+				database.addLookUpValue(key, value);
+			}
+		}
+		
+		ap.resetXPath();
+		vn.toElement(VTDNav.ROOT);
+		
+		for(int i = 0; i < keys.size(); i++){
+			AutoPilot apXpath = new AutoPilot();
+			apXpath.selectXPath(xpath.get(i));
+			apXpath.bind(vn);
+			String value = apXpath.evalXPathToString();
+			apXpath.resetXPath();
+			database.addLookUpValue(keys.get(i), value);
+		}
+		
+		return database;
+	}
+
+	private static Table fillInTable(VTDNav vn) throws XPathParseException, XPathEvalException,
 			NavException {
 		Table table = new Table();
 
@@ -81,6 +150,12 @@ public class MapperXML {
 			type.bind(vn);
 			column.setType(type.evalXPathToString());
 			type.resetXPath();
+			
+			AutoPilot lookUpKey = new AutoPilot();
+			lookUpKey.selectXPath("lookup");
+			lookUpKey.bind(vn);
+			column.setLookUpKey(lookUpKey.evalXPathToString());
+			lookUpKey.resetXPath();
 			
 			table.addColumn(column);
 		}

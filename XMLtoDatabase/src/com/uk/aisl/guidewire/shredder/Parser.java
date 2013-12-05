@@ -36,7 +36,7 @@ public class Parser {
 		ArrayList<Table> tables = database.getTables();
 		for (Table table : tables) {
 			try {
-				this.fillInTableValues(table);
+				this.fillInTableValues(database, table);
 			} catch (XPathEvalException e) {
 				throw new CrashException("Failed xpath for payloadXML", e);
 			} catch (NavException e) {
@@ -48,7 +48,7 @@ public class Parser {
 		return database;
 	}
 
-	private void fillInTableValues(Table table) throws XPathParseException, XPathEvalException, NavException {
+	private void fillInTableValues(Database database, Table table) throws XPathParseException, XPathEvalException, NavException {
 		AutoPilot ap = new AutoPilot();
 		ap.selectXPath(table.getXpathROOT());
 		ap.bind(vn);
@@ -56,17 +56,21 @@ public class Parser {
 		while (ap.evalXPath() != -1) {
 			ArrayList<Column> columns = table.getColumns();
 			for (Column column : columns) {
-				this.fillInColumnValues(column);
+				this.fillInColumnValues(database, column);
 			}
 		}
 		ap.resetXPath();
 	}
 
-	private void fillInColumnValues(Column column) throws XPathParseException {
-		AutoPilot ap = new AutoPilot();
-		ap.selectXPath(column.getXpath());
-		ap.bind(vn);
-		column.addValue(ap.evalXPathToString());
-		ap.resetXPath();
+	private void fillInColumnValues(Database database, Column column) throws XPathParseException {
+		if(column.getXpath() == null || column.getXpath().equals("")){
+			column.addValue(database.getLookUpValue(column.getLookUpKey()));
+		} else {
+			AutoPilot ap = new AutoPilot();
+			ap.selectXPath(column.getXpath());
+			ap.bind(vn);
+			column.addValue(ap.evalXPathToString());
+			ap.resetXPath();
+		}
 	}
 }
