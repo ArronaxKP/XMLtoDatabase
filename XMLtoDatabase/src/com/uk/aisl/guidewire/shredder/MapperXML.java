@@ -1,6 +1,9 @@
 package com.uk.aisl.guidewire.shredder;
 
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
+import com.uk.aisl.guidewire.shredder.mapper.ColumnMapper;
+import com.uk.aisl.guidewire.shredder.mapper.DatabaseMapper;
+import com.uk.aisl.guidewire.shredder.mapper.TableMapper;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.VTDGen;
@@ -10,8 +13,8 @@ import com.ximpleware.XPathParseException;
 
 public class MapperXML {
 
-	public static Database parseMapperXML(String path) throws CrashException {
-		Database database = new Database();
+	public static DatabaseMapper parseMapperXML(String path) throws CrashException {
+		DatabaseMapper database = new DatabaseMapper();
 		VTDGen vg = new VTDGen();
 		if (vg.parseFile(path, false)) {
 			// parsing succeeded
@@ -41,9 +44,9 @@ public class MapperXML {
 		return database;
 	}
 
-	private static Table fillInTable(int tableROOT, VTDNav vn) throws XPathParseException, XPathEvalException,
+	private static TableMapper fillInTable(int tableROOT, VTDNav vn) throws XPathParseException, XPathEvalException,
 			NavException {
-		Table table = new Table();
+		TableMapper table = new TableMapper();
 
 		AutoPilot apName = new AutoPilot();
 		apName.selectXPath("name");
@@ -62,7 +65,7 @@ public class MapperXML {
 		ap.bind(vn);
 		
 		while (ap.evalXPath() != -1) {
-			Column column = new Column();
+			ColumnMapper column = new ColumnMapper();
 			
 			AutoPilot name = new AutoPilot();
 			name.selectXPath("name");

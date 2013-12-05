@@ -1,9 +1,14 @@
 package com.uk.aisl.guidewire.shredder;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
+import com.uk.aisl.guidewire.shredder.mapper.ColumnMapper;
+import com.uk.aisl.guidewire.shredder.mapper.DatabaseMapper;
+import com.uk.aisl.guidewire.shredder.mapper.TableMapper;
+import com.uk.aisl.guidewire.shredder.model.ColumnValues;
+import com.uk.aisl.guidewire.shredder.model.DatabaseValues;
+import com.uk.aisl.guidewire.shredder.model.TableValues;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.ParseException;
@@ -32,11 +37,11 @@ public class Parser {
 		}
 	}
 
-	public Database parseXML(Database database) throws CrashException {
-		ArrayList<Table> tables = database.getTables();
-		for (Table table : tables) {
+	public DatabaseValues parseXML(DatabaseMapper databaseMapper, DatabaseValues database) throws CrashException {
+		int numberOfTables = database.getTables().size();
+		for (int i = 0; i < numberOfTables; i++) {
 			try {
-				this.fillInTableValues(table);
+				this.fillInTableValues(databaseMapper.getTable(i), database.getTable(i));
 			} catch (XPathEvalException e) {
 				throw new CrashException("Failed xpath for payloadXML", e);
 			} catch (NavException e) {
@@ -48,23 +53,23 @@ public class Parser {
 		return database;
 	}
 
-	private void fillInTableValues(Table table) throws XPathParseException, XPathEvalException, NavException {
+	private void fillInTableValues(TableMapper tableMapper, TableValues table) throws XPathParseException, XPathEvalException, NavException {
 		AutoPilot ap = new AutoPilot();
-		ap.selectXPath(table.getXpathROOT());
+		ap.selectXPath(tableMapper.getXpathROOT());
 		ap.bind(vn);
 
 		while (ap.evalXPath() != -1) {
-			ArrayList<Column> columns = table.getColumns();
-			for (Column column : columns) {
-				this.fillInColumnValues(column);
+			int numberOfColumns = tableMapper.getColumns().size();
+			for (int i = 0; i < numberOfColumns; i++) {
+				this.fillInColumnValues(tableMapper.getColumn(i), table.getColumn(i));
 			}
 		}
 		ap.resetXPath();
 	}
 
-	private void fillInColumnValues(Column column) throws XPathParseException {
+	private void fillInColumnValues(ColumnMapper columnMapper, ColumnValues column) throws XPathParseException {
 		AutoPilot ap = new AutoPilot();
-		ap.selectXPath(column.getXpath());
+		ap.selectXPath(columnMapper.getXpath());
 		ap.bind(vn);
 		column.addValue(ap.evalXPathToString());
 		ap.resetXPath();

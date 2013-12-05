@@ -6,33 +6,39 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.na.aisl.db.ConnectionManager;
+import com.uk.aisl.guidewire.shredder.mapper.ColumnMapper;
+import com.uk.aisl.guidewire.shredder.mapper.DatabaseMapper;
+import com.uk.aisl.guidewire.shredder.mapper.TableMapper;
+import com.uk.aisl.guidewire.shredder.model.DatabaseValues;
+import com.uk.aisl.guidewire.shredder.model.TableValues;
 
 public class Loader {
 	
-	private static ArrayList<String> createStatements(String sprint, Database database){
+	private static ArrayList<String> createStatements(String sprint, DatabaseMapper databaseMapper, DatabaseValues databaseValues){
 		
 		ArrayList<String> statements = new ArrayList<String>();
-		ArrayList<Table> tables = database.getTables();
 		StringBuffer buff = new StringBuffer();
-		
-		for(Table t: tables){
+		int numberOfTables = databaseValues.getNumberOfTables();
+		for(int tableCounter = 0; tableCounter < numberOfTables; tableCounter++ ) {
 			
-			buff.append("INSERT INTO [" + sprint + "]." + t.getTableName() + "(");
+			TableMapper tableMapper = databaseMapper.getTable(tableCounter);
+			buff.append("INSERT INTO [" + sprint + "]." + tableMapper.getTableName() + "(");
 			
-			ArrayList<Column> columns = t.getColumns();
-			
-			for(Column c : columns){
-				buff.append(c.getColumnName() + ",");
+			for(ColumnMapper columnMapper : tableMapper.getColumns()){
+				buff.append(columnMapper.getColumnName() + ",");
 			}
 			buff.deleteCharAt(buff.length()-1);
 			buff.append(") ");
 			
-			int numberOfRows = columns.get(0).size();
+			TableValues tableValues = databaseValues.getTable(tableCounter);
+			int numberOfRows = databaseValues.getTable(0).getColumn(0).size();
 			for(int row = 0; row < numberOfRows; row++){
 				buff.append("(");
 				//record count
-				for(int column = 0; column < columns.size(); column++){
-					buff.append(columns.get(column).getValue(row) + ",");
+				int columnSize = tableValues.getNumberOfColumns();
+				
+				for(int columnCounter = 0; columnCounter < columnSize; columnCounter++){
+					buff.append(tableValues.getColumn(columnCounter).getValue(row) + ",");
 				}
 				
 				buff.deleteCharAt(buff.length() - 1);
@@ -48,13 +54,13 @@ public class Loader {
 		
 	}
 	
-	public static boolean whatIsAQuote(Database database){
+	public static boolean whatIsAQuote(DatabaseMapper databaseMapper, DatabaseValues databaseValues){
 		boolean success = true;
 		
 		try{
 			Connection conn = ConnectionManager.getConnection();
 			
-			ArrayList<String> statements = createStatements("Quotes", database);
+			ArrayList<String> statements = createStatements("Quotes", databaseMapper, databaseValues);
 			for(String s : statements){
 				PreparedStatement stmnt = conn.prepareStatement(s);
 				int winner = stmnt.executeUpdate();
