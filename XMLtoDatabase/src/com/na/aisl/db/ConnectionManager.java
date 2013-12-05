@@ -16,7 +16,7 @@ public class ConnectionManager {
 		setUpDataSource();
 	};
 	
-	public static ConnectionManager getInstance(){
+	private static ConnectionManager getInstance(){
 		if(instance == null){
 			instance = new ConnectionManager();
 		}
@@ -24,6 +24,7 @@ public class ConnectionManager {
 	}
 	
 	public static Connection getConnection() throws SQLException{
+		getInstance();
 		return dataSource.getConnection();
 	}
 	
