@@ -4,6 +4,7 @@ import com.uk.aisl.guidewire.shredder.exception.CrashException;
 import com.uk.aisl.guidewire.shredder.model.Column;
 import com.uk.aisl.guidewire.shredder.model.Database;
 import com.uk.aisl.guidewire.shredder.model.LookUp;
+import com.uk.aisl.guidewire.shredder.model.SourceDatabase;
 import com.uk.aisl.guidewire.shredder.model.Table;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
@@ -21,7 +22,8 @@ public class MapperXML {
 			// parsing succeeded
 			try {
 				VTDNav vn = vg.getNav();
-
+				
+				MapperXML.getSourceDatabaseValues(database, vn);
 				MapperXML.getDatabaseValues(database, vn);
 				MapperXML.fillInLookUps(database, vn);
 				//needs some work
@@ -47,6 +49,69 @@ public class MapperXML {
 		return database;
 	}
 
+	private static void getSourceDatabaseValues(Database database, VTDNav vn) throws XPathParseException, XPathEvalException, NavException {
+		SourceDatabase source = new SourceDatabase();
+		AutoPilot apDBName = new AutoPilot();
+		apDBName.selectXPath("//shredder/sourcedatabase/databasename");
+		apDBName.bind(vn);
+		source.setDatabaseName(apDBName.evalXPathToString());
+		apDBName.resetXPath();
+		
+		AutoPilot apDBPort = new AutoPilot();
+		apDBPort.selectXPath("//shredder/sourcedatabase/port");
+		apDBPort.bind(vn);
+		source.setPort(apDBPort.evalXPathToString());
+		apDBPort.resetXPath();
+		
+		AutoPilot apServerName = new AutoPilot();
+		apServerName.selectXPath("//shredder/sourcedatabase/servername");
+		apServerName.bind(vn);
+		source.setServerName(apServerName.evalXPathToString());
+		apServerName.resetXPath();
+		
+		AutoPilot apSchema = new AutoPilot();
+		apSchema.selectXPath("//shredder/sourcedatabase/schema");
+		apSchema.bind(vn);
+		source.setSchema(apSchema.evalXPathToString());
+		apSchema.resetXPath();
+		
+		Table table = new Table();
+		AutoPilot apTableName = new AutoPilot();
+		apTableName.selectXPath("//shredder/sourcedatabase/table/name");
+		apTableName.bind(vn);
+		table.setTableName(apTableName.evalXPathToString());
+		apTableName.resetXPath();
+		
+		AutoPilot apTableClause = new AutoPilot();
+		apTableClause.selectXPath("//shredder/sourcedatabase/table/clause");
+		apTableClause.bind(vn);
+		table.setClause(apTableClause.evalXPathToString());
+		apTableClause.resetXPath();
+		
+		AutoPilot ap = new AutoPilot();
+		ap.selectXPath("//shredder/sourcedatabase/table/column");
+		ap.bind(vn);
+		
+		while (ap.evalXPath() != -1) {
+			Column column = new Column();
+			AutoPilot apColumnName = new AutoPilot();
+			apColumnName.selectXPath("name");
+			apColumnName.bind(vn);
+			column.setColumnName(apColumnName.evalXPathToString());
+			apColumnName.resetXPath();
+			
+			AutoPilot apVariableLookUpKey = new AutoPilot();
+			apVariableLookUpKey.selectXPath("variablelookupkey");
+			apVariableLookUpKey.bind(vn);
+			column.setLookUpKey(apVariableLookUpKey.evalXPathToString());
+			apVariableLookUpKey.resetXPath();
+			table.addColumn(column);
+		}
+		source.setTable(table);
+		database.setSource(source);
+		vn.toElement(VTDNav.ROOT);
+	}
+
 	private static void getDatabaseValues(Database database, VTDNav vn) throws NavException, XPathParseException {
 		AutoPilot apDBName = new AutoPilot();
 		apDBName.selectXPath("//shredder/database/databasename");
@@ -65,6 +130,12 @@ public class MapperXML {
 		apServerName.bind(vn);
 		database.setServerName(apServerName.evalXPathToString());
 		apServerName.resetXPath();
+		
+		AutoPilot apSchema = new AutoPilot();
+		apSchema.selectXPath("//shredder/database/schema");
+		apSchema.bind(vn);
+		database.setSchema(apSchema.evalXPathToString());
+		apSchema.resetXPath();
 		
 		vn.toElement(VTDNav.ROOT);
 	}

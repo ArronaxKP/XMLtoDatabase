@@ -5,32 +5,44 @@ import java.sql.SQLException;
 
 import com.microsoft.sqlserver.jdbc.*;
 import com.uk.aisl.guidewire.shredder.model.Database;
+import com.uk.aisl.guidewire.shredder.model.SourceDatabase;
 
 public class ConnectionManager {
-	
+
 	private static ConnectionManager instance = null;
-	private static SQLServerDataSource dataSource = new SQLServerDataSource();
-	
-	private ConnectionManager(Database database){
-		setUpDataSource(database);
-	};
-	
-	private static ConnectionManager getInstance(Database database){
-		if(instance == null){
+	private SQLServerDataSource targetDatabase = new SQLServerDataSource();
+	private SQLServerDataSource sourceDatabase = new SQLServerDataSource();
+
+	private ConnectionManager(Database database) {
+		this.setUpTargetDatabase(database);
+		this.setUpSourceDatabase(database.getSource());
+	}
+
+	private static ConnectionManager getInstance(Database database) {
+		if (instance == null) {
 			instance = new ConnectionManager(database);
 		}
 		return instance;
 	}
-	
-	public static Connection getConnection(Database database) throws SQLException{
-		getInstance(database);
-		return dataSource.getConnection();
+
+	public static Connection getSourceConnection(Database database) throws SQLException {
+		return getInstance(database).sourceDatabase.getConnection();
 	}
-	
-	private static void setUpDataSource(Database database){
-			dataSource.setServerName(database.getServerName());
-			dataSource.setDatabaseName(database.getDatabaseName());
-			dataSource.setPortNumber(Integer.parseInt(database.getPort()));
+
+	public static Connection getTargetConnection(Database database) throws SQLException {
+		return getInstance(database).targetDatabase.getConnection();
 	}
-	
+
+	private void setUpTargetDatabase(Database database) {
+		sourceDatabase.setServerName(database.getServerName());
+		sourceDatabase.setDatabaseName(database.getDatabaseName());
+		sourceDatabase.setPortNumber(Integer.parseInt(database.getPort()));
+	}
+
+	private void setUpSourceDatabase(SourceDatabase source) {
+		sourceDatabase.setServerName(source.getServerName());
+		sourceDatabase.setDatabaseName(source.getDatabaseName());
+		sourceDatabase.setPortNumber(Integer.parseInt(source.getPort()));
+	}
+
 }

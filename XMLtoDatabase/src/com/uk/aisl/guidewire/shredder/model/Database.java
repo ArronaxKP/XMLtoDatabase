@@ -6,10 +6,12 @@ import java.util.HashMap;
 public class Database {
 
 	private ArrayList<Table> tables;
+	private SourceDatabase source;
 	
 	private String databaseName;
 	private String serverName;
 	private String port;
+	private String schema;
 	
 	private HashMap<String, LookUp> lookUps;
 	private ArrayList<String> lookUpKeys;
@@ -86,5 +88,21 @@ public class Database {
 		for(Table table: this.tables) {
 			table.cleanDown();
 		}
+	}
+
+	public void setSchema(String schema) {
+		this.schema = schema;
+	}
+	
+	public String getSchema() {
+		return this.schema;
+	}
+
+	public SourceDatabase getSource() {
+		return source;
+	}
+
+	public void setSource(SourceDatabase source) {
+		this.source = source;
 	}
 }

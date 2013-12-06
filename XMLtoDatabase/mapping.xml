@@ -1,16 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shredder>
+	<sourcedatabase>
+		<servername>SERVER</servername>
+		<databasename>DATABASE</databasename>
+		<port>8080</port>
+		<schema>dbo</schema>
+		<table>
+			<name>PolicyPeriod</name>
+			<column>
+				<name>XMLPayload</name>
+				<variablelookupkey>XML</variablelookupkey>
+			</column>
+			<column>
+				<name>ID</name>
+				<variablelookupkey>TransID</variablelookupkey>
+			</column>
+			<column>
+				<name>Type</name>
+				<variablelookupkey>TransType</variablelookupkey>
+			</column>
+			<clause>WHERE ProcessDate IS NULL</clause>
+		</table>
+	</sourcedatabase>
 	<database>
 		<servername>SERVER</servername>
 		<databasename>DATABASE</databasename>
-		<port>80</port>
+		<port>8080</port>
+		<schema>Quotes</schema>
+		<selector></selector>
 		<lookupfield>
 			<key>transid</key>
-			<variable>transid</variable>
+			<variable>TransID</variable>
 		</lookupfield>
 		<lookupfield>
-			<key>type</key>
-			<variable>type</variable>
+			<key>transtype</key>
+			<variable>TransType</variable>
 		</lookupfield>
 		<lookupfield>
 			<key>policyperiodid</key>
@@ -28,8 +52,8 @@
 				<lookup>transid</lookup>
 			</column>
 			<column>
-				<name>Type</name>
-				<lookup>type</lookup>
+				<name>TransType</name>
+				<lookup>transtype</lookup>
 			</column>
 			<column>
 				<name>PPID</name>
@@ -56,6 +80,10 @@
 				<xpath>EISEditEffectiveDateExt[1]</xpath>
 			</column>
 			<column>
+				<name>EISPolicyTermNumber</name>
+				<xpath>EISPolicyTermNumber[1]</xpath>
+			</column>
+			<column>
 				<name>FcraNotice</name>
 				<xpath>FcraNotice[1]</xpath>
 			</column>
@@ -68,7 +96,7 @@
 				<xpath>(MostRecentModel)[1]</xpath>
 			</column>
 			<column>
-				<name>PolPerPublicID</name>
+				<name>polPerPublicID</name>
 				<xpath>(PublicID)[1]</xpath>
 			</column>
 			<column>
@@ -116,7 +144,7 @@
 				<xpath>(TransactionFeeAmountExt)[1]</xpath>
 			</column>
 			<column>
-				<name>TransactionCostRPT</name>
+				<name>TransactionPremiumRPT</name>
 				<xpath>(TransactionPremiumRPT)[1]</xpath>
 			</column>
 			<column>
@@ -142,6 +170,10 @@
 			<column>
 				<name>UpdateUserID</name>
 				<xpath>(UpdateUser/ID/Value)[1]</xpath>
+			</column>
+			<column>
+				<name>UpdateUserContactID</name>
+				<xpath>(UpdateUser/Contact/ID/Value)[1]</xpath>
 			</column>
 			<column>
 				<name>UpdateUserContactFirstName</name>
@@ -211,8 +243,6 @@
 				<name>AccountID</name>
 				<lookup>accountid</lookup>
 			</column>
-			<name>Coverage</name>
-			<rootxpath>//PolicyPeriod/PATransactions/Entry</rootxpath>
 			<column>
 				<name>PATransID</name>
 				<xpath>(ID/Value)[1]</xpath>
@@ -528,6 +558,10 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(UpdateTime)[1]</xpath>
+			</column>
+			<column>
+				<name>WebQuoteID</name>
+				<xpath>(WebCustomerNubmerExt)[1]</xpath>
 			</column>
 			<column>
 				<name>WebToPhoneDiscountExt</name>

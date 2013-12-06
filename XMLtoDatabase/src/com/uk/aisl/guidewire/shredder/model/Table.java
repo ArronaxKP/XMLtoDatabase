@@ -7,12 +7,13 @@ public class Table {
 	private String tableName;
 	private String xpathROOT;
 	private ArrayList<Column> columns;
+	private String clause;
 
 	public Table() {
 		this.columns = new ArrayList<Column>();
 	}
 
-	public String getTableName() {
+	public String getName() {
 		return tableName;
 	}
 
@@ -40,5 +41,13 @@ public class Table {
 		for(Column column: this.columns) {
 			column.cleanDown();
 		}
+	}
+
+	public String getClause() {
+		return clause;
+	}
+
+	public void setClause(String clause) {
+		this.clause = clause;
 	}
 }
