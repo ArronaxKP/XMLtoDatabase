@@ -53,10 +53,18 @@ public class Loader {
 								if(value.equals("null")){
 									buff.append(null + ",");
 								} else {
-									if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
-										buff.append(value + ",");
+									if(value.equalsIgnoreCase("true")){
+										buff.append(1 + ",");
 									} else {
-										buff.append("'" + value + "',");
+										if(value.equalsIgnoreCase("false")) {
+											buff.append(0 + ",");
+										} else {
+											if(value.matches("[0]")){
+												buff.append("dateadd(mi, datediff(mi,getutcdate(),getdate())"+value);
+											} else {
+												buff.append("'" + value + "',");
+											}
+										}
 									}
 								}
 							}
