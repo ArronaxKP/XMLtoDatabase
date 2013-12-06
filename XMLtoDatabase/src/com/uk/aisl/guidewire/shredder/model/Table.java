@@ -1,4 +1,4 @@
-package com.uk.aisl.guidewire.shredder;
+package com.uk.aisl.guidewire.shredder.model;
 
 import java.util.ArrayList;
 
@@ -34,5 +34,11 @@ public class Table {
 	
 	public ArrayList<Column> getColumns(){
 		return this.columns;
+	}
+
+	public void cleanDown() {
+		for(Column column: this.columns) {
+			column.cleanDown();
+		}
 	}
 }

@@ -1,9 +1,13 @@
-package com.uk.aisl.guidewire.shredder;
+package com.uk.aisl.guidewire.shredder.xml;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
+import com.uk.aisl.guidewire.shredder.model.Column;
+import com.uk.aisl.guidewire.shredder.model.Database;
+import com.uk.aisl.guidewire.shredder.model.Table;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.ParseException;
@@ -32,12 +36,12 @@ public class Parser {
 		}
 	}
 
-	public Database parseXML(Database database) throws CrashException {
+	public Database parseXML(Database database, HashMap<String,String> variableMap) throws CrashException {
 		ArrayList<Table> tables = database.getTables();
 		for (Table table : tables) {
 			try {
+				this.fillInLookUpValues(database,variableMap);
 				this.fillInTableValues(database, table);
-				this.fillInLookUpValues(database);
 			} catch (XPathEvalException e) {
 				throw new CrashException("Failed xpath for payloadXML", e);
 			} catch (NavException e) {
@@ -49,26 +53,37 @@ public class Parser {
 		return database;
 	}
 
-	private void fillInLookUpValues(Database database) throws XPathParseException, NavException {
-		vn.toElement(VTDNav.ROOT);
-		ArrayList<String> lookUpKeys = database.getLookUpKeys();
-		int totalLookUps = lookUpKeys.size();
-		for(int i = 0; i < totalLookUps; i++){
-			String value = database.getLookUpValue(lookUpKeys.get(i));
-			if(value == null || value.equals("")) {
-				String xpath = database.getLookUpXpath(lookUpKeys.get(i));
-				if(xpath == null || xpath.equals("")) {
-					value = "";//TODO assign variable
-				} else {
-					AutoPilot apXpath = new AutoPilot();
-					apXpath.selectXPath(database.getLookUpXpath(lookUpKeys.get(i)));
-					apXpath.bind(vn);
-					value = apXpath.evalXPathToString();
-					apXpath.resetXPath();
-					
+	private void fillInLookUpValues(Database database, HashMap<String, String> variableMap) throws CrashException {
+		try{
+			vn.toElement(VTDNav.ROOT);
+			ArrayList<String> lookUpKeys = database.getLookUpKeys();
+			int totalLookUps = lookUpKeys.size();
+			for(int i = 0; i < totalLookUps; i++){
+				String value = database.getLookUpValue(lookUpKeys.get(i));
+				if(value == null || value.equals("")) {
+					String xpath = database.getLookUpXpath(lookUpKeys.get(i));
+					if(xpath == null || xpath.equals("")) {
+						String variable = database.getLookUpVariable(lookUpKeys.get(i));
+						if(variable == null || variable.equals("")) {
+							throw new CrashException("Lookup key failed. Key: " + lookUpKeys.get(i));
+						} else {
+							value = variableMap.get(variable);
+						}
+					} else {
+						AutoPilot apXpath = new AutoPilot();
+						apXpath.selectXPath(xpath);
+						apXpath.bind(vn);
+						value = apXpath.evalXPathToString();
+						apXpath.resetXPath();
+						
+					}
 				}
+				database.setLookUpValue(lookUpKeys.get(i), value);
 			}
-			database.setLookUpValue(lookUpKeys.get(i), value);
+		}catch(NavException e){
+			new CrashException("Unable to complete look ups", e);
+		} catch (XPathParseException e) {
+			new CrashException("Unable to complete look ups", e);
 		}
 	}
 

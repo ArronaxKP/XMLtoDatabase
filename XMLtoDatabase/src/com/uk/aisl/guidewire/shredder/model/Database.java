@@ -1,4 +1,4 @@
-package com.uk.aisl.guidewire.shredder;
+package com.uk.aisl.guidewire.shredder.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,9 +60,14 @@ public class Database {
 	public String getLookUpXpath(String key) {
 		return this.lookUps.get(key).getXpath();
 	}
+	
+	public String getLookUpVariable(String key) {
+		return this.lookUps.get(key).getVariable();
+	}
 		
 	public String getLookUpValue(String key) {
-		return this.lookUps.get(key).getValue();
+		LookUp lookup = this.lookUps.get(key);
+		return lookup.getValue();
 	}
 	
 	public void setLookUpValue(String key, String value) {
@@ -71,5 +76,15 @@ public class Database {
 	
 	public ArrayList<String> getLookUpKeys() {
 		return this.lookUpKeys;
+	}
+
+	public void cleanDown() {
+		for(String key: this.lookUpKeys) {
+			this.lookUps.get(key).setValue(null);
+		}
+		//this.lookUpKeys = new ArrayList<String>(50);
+		for(Table table: this.tables) {
+			table.cleanDown();
+		}
 	}
 }

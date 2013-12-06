@@ -1,4 +1,4 @@
-package com.uk.aisl.guidewire.shredder;
+package com.uk.aisl.guidewire.shredder.model;
 
 import java.util.ArrayList;
 
@@ -56,5 +56,9 @@ public class Column {
 	
 	public void setLookUpKey(String lookUpKey) {
 		this.lookUpKey = lookUpKey;
+	}
+
+	public void cleanDown() {
+		this.values = null;
 	}
 }

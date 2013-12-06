@@ -1,4 +1,4 @@
-package com.uk.aisl.guidewire.shredder;
+package com.uk.aisl.guidewire.shredder.exception;
 
 public class Logger {
 	public static void error(String errorMessage){

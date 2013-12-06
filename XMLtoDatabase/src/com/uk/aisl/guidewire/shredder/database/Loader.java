@@ -1,13 +1,17 @@
-package com.uk.aisl.guidewire.shredder;
+package com.uk.aisl.guidewire.shredder.database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import com.na.aisl.db.ConnectionManager;
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
+import com.uk.aisl.guidewire.shredder.model.Column;
+import com.uk.aisl.guidewire.shredder.model.Database;
+import com.uk.aisl.guidewire.shredder.model.Table;
+import com.uk.aisl.guidewire.shredder.model.XMLReturn;
 
 public class Loader {
 	
@@ -50,11 +54,11 @@ public class Loader {
 		
 	}
 	
-	private static void updateXMLTable(String transID) throws CrashException{
+	private static void updateXMLTable(Database database) throws CrashException{
 		
 		try{
-			Connection conn = ConnectionManager.getConnection();
-			PreparedStatement stmnt = conn.prepareStatement("UPDATE table SET ProcessDate = getdate() WHERE TransID = \"" + transID + "\"");
+			Connection conn = ConnectionManager.getConnection(database);
+			PreparedStatement stmnt = conn.prepareStatement("UPDATE table SET ProcessDate = getdate() WHERE TransID = \"" + database.getLookUpValue("TransID") + "\"");
 			stmnt.execute();
 			conn.close();
 		}
@@ -64,15 +68,17 @@ public class Loader {
 		
 	}
 	
-	public static ArrayList<Pair<String, String>> getXML() throws CrashException{
-		ArrayList<Pair<String, String>> orderedPairList = new ArrayList<Pair<String, String>>(); 
+	public static ArrayList<XMLReturn> getXML(Database database) throws CrashException{
+		ArrayList<XMLReturn> orderedPairList = new ArrayList<XMLReturn>(); 
 		try{
-			Connection conn = ConnectionManager.getConnection();
+			Connection conn = ConnectionManager.getConnection(database);
 			
 			PreparedStatement stmnt = conn.prepareStatement("SELECT ID, XMLPayload FROM table WHERE ProcessDate IS NULL");
 			ResultSet rs = stmnt.executeQuery();
 			while(rs.next()){
-				orderedPairList.add(new Pair<String,String>(rs.getString(0), rs.getString(1)));
+				HashMap<String,String> variableMap = new HashMap<String,String>(97);
+				variableMap.put("TransID", rs.getString(0));
+				orderedPairList.add(new XMLReturn(variableMap, rs.getString(1)));
 			}
 			conn.close();
 			rs.close();
@@ -89,7 +95,7 @@ public class Loader {
 		boolean success = true;
 		
 		try{
-			Connection conn = ConnectionManager.getConnection();
+			Connection conn = ConnectionManager.getConnection(database);
 			
 			ArrayList<String> statements = createStatements("Quotes", database);
 			for(String s : statements){
@@ -99,7 +105,7 @@ public class Loader {
 					success = false;
 				}
 				else{
-					updateXMLTable("databaseTransID");
+					updateXMLTable(database);
 				}
 			}
 			

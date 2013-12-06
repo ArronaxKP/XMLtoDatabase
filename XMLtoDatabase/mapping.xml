@@ -1,31 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shredder>
-	<!-- <database>
-		<type>Source</type>
-		<servername></servername>
-		<databasename></databasename>
-		<port></port>
-		<table>
-			<name></name>
-			<column>
-				<name></name>
-				<type>varchar</type>
-			</column>
-			<column>
-				<name></name>
-				<type>xml</type>
-			</column>
-			<column>
-				<name></name>
-				<type>int</type>
-			</column>
-		</table>
-	</database> -->
 	<database>
-		<type>Destination</type>
-		<servername></servername>
-		<databasename></databasename>
-		<port></port>
+		<servername>SERVER</servername>
+		<databasename>DATABASE</databasename>
+		<port>80</port>
 		<lookupfield>
 			<key>transid</key>
 			<variable>transid</variable>

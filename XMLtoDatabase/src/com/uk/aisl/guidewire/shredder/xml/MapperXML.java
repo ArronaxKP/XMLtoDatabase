@@ -1,6 +1,10 @@
-package com.uk.aisl.guidewire.shredder;
+package com.uk.aisl.guidewire.shredder.xml;
 
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
+import com.uk.aisl.guidewire.shredder.model.Column;
+import com.uk.aisl.guidewire.shredder.model.Database;
+import com.uk.aisl.guidewire.shredder.model.LookUp;
+import com.uk.aisl.guidewire.shredder.model.Table;
 import com.ximpleware.AutoPilot;
 import com.ximpleware.NavException;
 import com.ximpleware.VTDGen;
@@ -17,8 +21,9 @@ public class MapperXML {
 			// parsing succeeded
 			try {
 				VTDNav vn = vg.getNav();
-				
-				database = MapperXML.fillInLookUps(database, vn);
+
+				MapperXML.getDatabaseValues(database, vn);
+				MapperXML.fillInLookUps(database, vn);
 				//needs some work
 				AutoPilot ap = new AutoPilot();
 				ap.selectXPath("//shredder/database/table");
@@ -42,8 +47,29 @@ public class MapperXML {
 		return database;
 	}
 
-	private static Database fillInLookUps(Database database, VTDNav vn) throws XPathParseException, XPathEvalException, NavException {
+	private static void getDatabaseValues(Database database, VTDNav vn) throws NavException, XPathParseException {
+		AutoPilot apDBName = new AutoPilot();
+		apDBName.selectXPath("//shredder/database/databasename");
+		apDBName.bind(vn);
+		database.setDatabaseName(apDBName.evalXPathToString());
+		apDBName.resetXPath();
 		
+		AutoPilot apDBPort = new AutoPilot();
+		apDBPort.selectXPath("//shredder/database/port");
+		apDBPort.bind(vn);
+		database.setPort(apDBPort.evalXPathToString());
+		apDBPort.resetXPath();
+		
+		AutoPilot apServerName = new AutoPilot();
+		apServerName.selectXPath("//shredder/database/servername");
+		apServerName.bind(vn);
+		database.setServerName(apServerName.evalXPathToString());
+		apServerName.resetXPath();
+		
+		vn.toElement(VTDNav.ROOT);
+	}
+
+	private static void fillInLookUps(Database database, VTDNav vn) throws XPathParseException, XPathEvalException, NavException {
 		
 		AutoPilot ap = new AutoPilot();
 		ap.selectXPath("//shredder/database/lookupfield");
@@ -73,13 +99,10 @@ public class MapperXML {
 			apVariable.bind(vn);
 			String variable = apVariable.evalXPathToString();
 			apVariable.resetXPath();
-			//Stubbed TODO
-			value = "Need to map database variables "+variable;
 			
-			database.addLookUpValue(key, new LookUp(xpath, value));
+			database.addLookUpValue(key, new LookUp(xpath, value, variable));
 		}
-		
-		return database;
+		vn.toElement(VTDNav.ROOT);
 	}
 
 	private static Table fillInTable(VTDNav vn) throws XPathParseException, XPathEvalException,
