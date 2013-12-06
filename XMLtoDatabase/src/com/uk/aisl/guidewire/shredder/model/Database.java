@@ -12,6 +12,8 @@ public class Database {
 	private String serverName;
 	private String port;
 	private String schema;
+	private String username;
+	private String password;
 	
 	private HashMap<String, LookUp> lookUps;
 	private ArrayList<String> lookUpKeys;
@@ -104,5 +106,21 @@ public class Database {
 
 	public void setSource(SourceDatabase source) {
 		this.source = source;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

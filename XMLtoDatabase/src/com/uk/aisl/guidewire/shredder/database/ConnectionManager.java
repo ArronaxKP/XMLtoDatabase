@@ -26,6 +26,10 @@ public class ConnectionManager {
 	}
 
 	public static Connection getSourceConnection(Database database) throws SQLException {
+//		String URL = "jdbc:sqlserver://vaqa-sql-05\\pc_qa;user=pcUser;password=pc";
+//		System.out.println(URL);
+//		Connection conn = DriverManager.getConnection(URL);
+//		return conn;
 		return getInstance(database).sourceDatabase.getConnection();
 	}
 
@@ -34,15 +38,20 @@ public class ConnectionManager {
 	}
 
 	private void setUpTargetDatabase(Database database) {
-		sourceDatabase.setServerName(database.getServerName());
-		sourceDatabase.setDatabaseName(database.getDatabaseName());
-		sourceDatabase.setPortNumber(Integer.parseInt(database.getPort()));
+		targetDatabase.setServerName(database.getServerName());
+		targetDatabase.setDatabaseName(database.getDatabaseName());
+		//targetDatabase.setPortNumber(Integer.parseInt(database.getPort()));
+		targetDatabase.setUser(database.getUsername());
+		targetDatabase.setPassword(database.getPassword());
 	}
 
 	private void setUpSourceDatabase(SourceDatabase source) {
 		sourceDatabase.setServerName(source.getServerName());
 		sourceDatabase.setDatabaseName(source.getDatabaseName());
-		sourceDatabase.setPortNumber(Integer.parseInt(source.getPort()));
+		//sourceDatabase.setPortNumber(Integer.parseInt(source.getPort()));
+		sourceDatabase.setUser(source.getUsername());
+		sourceDatabase.setPassword(source.getPassword());
+		System.out.println(source.getUsername()+" : "+source.getPassword());
 	}
 
 }

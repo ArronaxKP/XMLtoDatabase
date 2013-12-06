@@ -23,8 +23,8 @@ public class Parser {
 
 	public Parser(String XML) throws CrashException {
 		try {
-			String withHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + XML;
-			byte[] bytes = withHeader.getBytes("UTF-8");
+			//String withHeader = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + XML;
+			byte[] bytes = XML.getBytes("UTF-8");
 			vg = new VTDGen();
 			vg.setDoc(bytes);
 			vg.parse(false);
@@ -38,9 +38,9 @@ public class Parser {
 
 	public Database parseXML(Database database, HashMap<String,String> variableMap) throws CrashException {
 		ArrayList<Table> tables = database.getTables();
+		this.fillInLookUpValues(database,variableMap);
 		for (Table table : tables) {
 			try {
-				this.fillInLookUpValues(database,variableMap);
 				this.fillInTableValues(database, table);
 			} catch (XPathEvalException e) {
 				throw new CrashException("Failed xpath for payloadXML", e);

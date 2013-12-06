@@ -9,6 +9,10 @@ public class Column {
 	private ArrayList<String> values;
 	private String lookUpKey;
 
+	public Column () {
+		this.values = new ArrayList<String>();
+	}
+	
 	public String getColumnName() {
 		return columnName;
 	}
@@ -41,9 +45,7 @@ public class Column {
 	}
 
 	public String getValue(int index) {
-		String tempValue = this.values.get(index);
-		this.values.set(index, null);
-		return tempValue;
+		return this.values.get(index);
 	}
 
 	public int size() {

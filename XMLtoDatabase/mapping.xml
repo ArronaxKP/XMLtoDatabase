@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shredder>
 	<sourcedatabase>
-		<servername>SERVER</servername>
-		<databasename>DATABASE</databasename>
-		<port>8080</port>
+		<servername>vaqa-sql-05\pc_qa</servername>
+		<databasename>PC_QA_TRANS</databasename>
+		<port>1433</port>
 		<schema>dbo</schema>
+		<username>pcUser</username>
+		<password></password>
 		<table>
-			<name>PolicyPeriod</name>
+			<name>tbl_trans_policy</name>
 			<column>
 				<name>XMLPayload</name>
 				<variablelookupkey>XML</variablelookupkey>
@@ -19,15 +21,16 @@
 				<name>Type</name>
 				<variablelookupkey>TransType</variablelookupkey>
 			</column>
-			<clause>WHERE ProcessDate IS NULL</clause>
+			<clause>WHERE [ID] = '29190'</clause>
 		</table>
 	</sourcedatabase>
 	<database>
-		<servername>SERVER</servername>
-		<databasename>DATABASE</databasename>
-		<port>8080</port>
+		<servername>vaqa-dw-01</servername>
+		<databasename>PC_STAGING</databasename>
+		<port>1433</port>
 		<schema>Quotes</schema>
-		<selector></selector>
+		<username>SSIS_PC_Staging</username>
+		<password></password>
 		<lookupfield>
 			<key>transid</key>
 			<variable>TransID</variable>
@@ -64,7 +67,7 @@
 				<xpath>(BasedOn/ID/Value)[1]</xpath>
 			</column>
 			<column>
-				<name>CeateTime</name>
+				<name>CreateTime</name>
 				<xpath>CreateTime[1]</xpath>
 			</column>
 			<column>

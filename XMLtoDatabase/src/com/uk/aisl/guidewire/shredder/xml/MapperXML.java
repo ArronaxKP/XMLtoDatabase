@@ -75,6 +75,18 @@ public class MapperXML {
 		source.setSchema(apSchema.evalXPathToString());
 		apSchema.resetXPath();
 		
+		AutoPilot apUsername = new AutoPilot();
+		apUsername.selectXPath("//shredder/sourcedatabase/username");
+		apUsername.bind(vn);
+		source.setUsername(apUsername.evalXPathToString());
+		apUsername.resetXPath();
+		
+		AutoPilot apPassword = new AutoPilot();
+		apPassword.selectXPath("//shredder/sourcedatabase/password");
+		apPassword.bind(vn);
+		source.setPassword(apPassword.evalXPathToString());
+		apPassword.resetXPath();
+		
 		Table table = new Table();
 		AutoPilot apTableName = new AutoPilot();
 		apTableName.selectXPath("//shredder/sourcedatabase/table/name");
@@ -136,6 +148,19 @@ public class MapperXML {
 		apSchema.bind(vn);
 		database.setSchema(apSchema.evalXPathToString());
 		apSchema.resetXPath();
+		
+
+		AutoPilot apUsername = new AutoPilot();
+		apUsername.selectXPath("//shredder/database/username");
+		apUsername.bind(vn);
+		database.setUsername(apUsername.evalXPathToString());
+		apUsername.resetXPath();
+		
+		AutoPilot apPassword = new AutoPilot();
+		apPassword.selectXPath("//shredder/database/password");
+		apPassword.bind(vn);
+		database.setPassword(apPassword.evalXPathToString());
+		apPassword.resetXPath();
 		
 		vn.toElement(VTDNav.ROOT);
 	}

@@ -32,21 +32,44 @@ public class Loader {
 				buff.append("[" + c.getColumnName() + "],");
 			}
 			buff.deleteCharAt(buff.length() - 1);
-			buff.append(") ");
+			buff.append(") VALUES ");
 
 			int numberOfRows = columns.get(0).size();
 			for (int row = 0; row < numberOfRows; row++) {
 				buff.append("(");
 
 				for (int column = 0; column < columns.size(); column++) {
-					buff.append(columns.get(column).getValue(row) + ",");
+					String value = columns.get(column).getValue(row);
+					if(value == null) {
+						buff.append(value + ",");
+					} else {
+						if(value.equals("")){
+							buff.append(null + ",");
+						} else {
+							try{
+								Integer.parseInt(value);
+								buff.append(value + ",");
+							}catch(NumberFormatException e){
+								if(value.equals("null")){
+									buff.append(null + ",");
+								} else {
+									if(value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+										buff.append(value + ",");
+									} else {
+										buff.append("'" + value + "',");
+									}
+								}
+							}
+						}
+					}
+					
 				}
 
 				buff.deleteCharAt(buff.length() - 1);
 				buff.append("), ");
 
 			}
-			buff.deleteCharAt(buff.length() - 1);
+			buff.deleteCharAt(buff.length() - 2);
 			statements.add(buff.toString());
 			buff.setLength(0);
 
@@ -56,7 +79,7 @@ public class Loader {
 	}
 
 	private static void updateXMLTable(Database database) throws CrashException {
-
+		/*
 		try {
 			Connection conn = ConnectionManager.getSourceConnection(database);
 			PreparedStatement stmnt = conn
@@ -66,7 +89,8 @@ public class Loader {
 			conn.close();
 		} catch (SQLException e) {
 			throw new CrashException("SQLException in updateXMLTable method!");
-		}
+		}*/
+		System.out.println("Updating old record");
 	}
 
 	public static ArrayList<XMLReturn> getXML(Database database) throws CrashException {
@@ -92,9 +116,9 @@ public class Loader {
 				String xmlPayload = null;
 				for (int i = 0; i < columns.size(); i++) {
 					if (columns.get(i).getLookUpKey().equals("XML")) {
-						xmlPayload = rs.getString(i);
+						xmlPayload = rs.getString(i+1);
 					} else {
-						variableMap.put(columns.get(i).getLookUpKey(), rs.getString(i));
+						variableMap.put(columns.get(i).getLookUpKey(), rs.getString(i+1));
 					}
 				}
 				orderedList.add(new XMLReturn(variableMap, xmlPayload));
@@ -117,6 +141,7 @@ public class Loader {
 
 			ArrayList<String> statements = createStatements(database);
 			for (String s : statements) {
+				System.out.println(s);
 				PreparedStatement stmnt = conn.prepareStatement(s);
 				int rowCount = stmnt.executeUpdate();
 				if (rowCount == 0) {
