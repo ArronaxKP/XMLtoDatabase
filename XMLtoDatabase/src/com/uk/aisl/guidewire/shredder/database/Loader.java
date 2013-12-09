@@ -38,44 +38,16 @@ public class Loader {
 			for (int row = 0; row < numberOfRows; row++) {
 				buff.append("(");
 
-				for (int column = 0; column < columns.size(); column++) {
-					String value = columns.get(column).getValue(row);
-					if(value == null) {
-						buff.append(value + ",");
+				for (int columnCounter = 0; columnCounter < columns.size(); columnCounter++) {
+					Column column = columns.get(columnCounter);
+					if(column.getType() == null || column.getType().equals("")) {
+						buff.append(Loader.guessValueType(column.getValue(row)));
 					} else {
-						if(value.equals("")){
-							buff.append(null + ",");
-						} else {
-							try{
-								Integer.parseInt(value);
-								buff.append(value + ",");
-							}catch(NumberFormatException e){
-								if(value.equals("null")){
-									buff.append(null + ",");
-								} else {
-									if(value.equalsIgnoreCase("true")){
-										buff.append(1 + ",");
-									} else {
-										if(value.equalsIgnoreCase("false")) {
-											buff.append(0 + ",");
-										} else {
-											if(value.matches("[0]")){
-												buff.append("dateadd(mi, datediff(mi,getutcdate(),getdate())"+value);
-											} else {
-												buff.append("'" + value + "',");
-											}
-										}
-									}
-								}
-							}
-						}
+						buff.append(column.getType().replace("?","'"+column.getValue(row)+"'")+",");
 					}
-					
 				}
-
 				buff.deleteCharAt(buff.length() - 1);
 				buff.append("), ");
-
 			}
 			buff.deleteCharAt(buff.length() - 2);
 			statements.add(buff.toString());
@@ -84,6 +56,35 @@ public class Loader {
 		}
 		return statements;
 
+	}
+	
+	private static String guessValueType(String value){
+		if(value == null) {
+			return value + ",";
+		} else {
+			if(value.equals("")){
+				return null + ",";
+			} else {
+				try{
+					Integer.parseInt(value);
+					return value + ",";
+				}catch(NumberFormatException e){
+					if(value.equals("null")){
+						return null + ",";
+					} else {
+						if(value.equalsIgnoreCase("true")){
+							return 1 + ",";
+						} else {
+							if(value.equalsIgnoreCase("false")) {
+								return 0 + ",";
+							} else {
+								return  "'" + value + "',";
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 	private static void updateXMLTable(Database database) throws CrashException {

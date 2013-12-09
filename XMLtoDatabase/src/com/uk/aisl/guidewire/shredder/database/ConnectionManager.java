@@ -51,7 +51,6 @@ public class ConnectionManager {
 		//sourceDatabase.setPortNumber(Integer.parseInt(source.getPort()));
 		sourceDatabase.setUser(source.getUsername());
 		sourceDatabase.setPassword(source.getPassword());
-		System.out.println(source.getUsername()+" : "+source.getPassword());
 	}
 
 }
