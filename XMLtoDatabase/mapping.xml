@@ -21,7 +21,7 @@
 				<name>Type</name>
 				<variablelookupkey>TransType</variablelookupkey>
 			</column>
-			<clause>WHERE [ID] = '29190'</clause>
+			<clause>WHERE Type = 'PolicyQuoted'</clause>
 		</table>
 	</sourcedatabase>
 	<database>

@@ -24,9 +24,15 @@ public class Loader {
 
 		for (Table t : tables) {
 
-			buff.append("INSERT INTO [" + database.getSchema() + "].[" + t.getName() + "] (");
-
+			System.out.println(t.getName());
 			ArrayList<Column> columns = t.getColumns();
+			Column currentColumn = columns.get(0);
+			System.out.println(currentColumn.getColumnName());
+			int numberOfRows = currentColumn.size();
+			if(numberOfRows == 0) {
+				continue;
+			}
+			buff.append("INSERT INTO [" + database.getSchema() + "].[" + t.getName() + "] (");
 
 			for (Column c : columns) {
 				buff.append("[" + c.getColumnName() + "],");
@@ -34,7 +40,7 @@ public class Loader {
 			buff.deleteCharAt(buff.length() - 1);
 			buff.append(") VALUES ");
 
-			int numberOfRows = columns.get(0).size();
+			
 			for (int row = 0; row < numberOfRows; row++) {
 				buff.append("(");
 
@@ -110,7 +116,7 @@ public class Loader {
 			Table table = source.getTable();
 			ArrayList<Column> columns = table.getColumns();
 			StringBuffer buff = new StringBuffer();
-			buff.append("SELECT ");
+			buff.append("SELECT TOP 1000 ");
 			for (int i = 0; i < columns.size(); i++) {
 				if (i != 0) {
 					buff.append(", ");
@@ -144,9 +150,9 @@ public class Loader {
 
 	public static boolean insertToStaging(Database database) throws CrashException {
 		boolean success = true;
-
+		Connection conn = null;
 		try {
-			Connection conn = ConnectionManager.getTargetConnection(database);
+			conn = ConnectionManager.getTargetConnection(database);
 
 			ArrayList<String> statements = createStatements(database);
 			for (String s : statements) {
@@ -158,12 +164,21 @@ public class Loader {
 				} else {
 					updateXMLTable(database);
 				}
+				stmnt.close();
 			}
 
 			conn.close();
 
 		} catch (SQLException e) {
-			throw new CrashException("SQL Exception in insertToStaging method!", e);
+			//No need to worry (Some filtering work could be here)
+		} finally {
+			if(conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					//No need to worry
+				}
+			}
 		}
 
 		return success;

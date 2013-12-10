@@ -31,7 +31,7 @@ public class Shredder {
 					Parser parser = new Parser(returnXML.getXmlPayload());
 					parser.parseXML(database, returnXML.getVariableMap());
 					if(Loader.insertToStaging(database)) {
-						System.out.println("We have a success");
+						System.out.println("SUCCESS");
 					} else {
 						System.out.println("FAILURE");
 					}
