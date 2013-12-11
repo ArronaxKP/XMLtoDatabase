@@ -23,13 +23,10 @@ public class Loader {
 		StringBuffer buff = new StringBuffer();
 
 		for (Table t : tables) {
-
-			System.out.println(t.getName());
 			ArrayList<Column> columns = t.getColumns();
 			Column currentColumn = columns.get(0);
-			System.out.println(currentColumn.getColumnName());
 			int numberOfRows = currentColumn.size();
-			if(numberOfRows == 0) {
+			if (numberOfRows == 0) {
 				continue;
 			}
 			buff.append("INSERT INTO [" + database.getSchema() + "].[" + t.getName() + "] (");
@@ -40,16 +37,15 @@ public class Loader {
 			buff.deleteCharAt(buff.length() - 1);
 			buff.append(") VALUES ");
 
-			
 			for (int row = 0; row < numberOfRows; row++) {
 				buff.append("(");
 
 				for (int columnCounter = 0; columnCounter < columns.size(); columnCounter++) {
 					Column column = columns.get(columnCounter);
-					if(column.getType() == null || column.getType().equals("")) {
+					if (column.getType() == null || column.getType().equals("")) {
 						buff.append(Loader.guessValueType(column.getValue(row)));
 					} else {
-						buff.append(column.getType().replace("?","'"+column.getValue(row)+"'")+",");
+						buff.append(column.getType().replace("?", "'" + column.getValue(row) + "'") + ",");
 					}
 				}
 				buff.deleteCharAt(buff.length() - 1);
@@ -63,28 +59,28 @@ public class Loader {
 		return statements;
 
 	}
-	
-	private static String guessValueType(String value){
-		if(value == null) {
+
+	private static String guessValueType(String value) {
+		if (value == null) {
 			return value + ",";
 		} else {
-			if(value.equals("")){
+			if (value.equals("")) {
 				return null + ",";
 			} else {
-				try{
+				try {
 					Integer.parseInt(value);
 					return value + ",";
-				}catch(NumberFormatException e){
-					if(value.equals("null")){
+				} catch (NumberFormatException e) {
+					if (value.equals("null")) {
 						return null + ",";
 					} else {
-						if(value.equalsIgnoreCase("true")){
+						if (value.equalsIgnoreCase("true")) {
 							return 1 + ",";
 						} else {
-							if(value.equalsIgnoreCase("false")) {
+							if (value.equalsIgnoreCase("false")) {
 								return 0 + ",";
 							} else {
-								return  "'" + value + "',";
+								return "'" + value + "',";
 							}
 						}
 					}
@@ -94,18 +90,21 @@ public class Loader {
 	}
 
 	private static void updateXMLTable(Database database) throws CrashException {
-		/*
 		try {
 			Connection conn = ConnectionManager.getSourceConnection(database);
-			PreparedStatement stmnt = conn
-					.prepareStatement("UPDATE table SET ProcessDate = getdate() WHERE TransID = \""
-							+ database.getLookUpValue("TransID") + "\"");
+			SourceDatabase source = database.getSource();
+			StringBuffer buff = new StringBuffer();
+			buff.append("Update " + "[" + source.getSchema() + "].");
+			buff.append("[" + source.getTable().getName() + "] SET ");
+			buff.append("[EDWProcessTime] = getDate() WHERE TransID = \"");
+			buff.append(database.getLookUpValue("TransID"));
+			buff.append("\"");
+			PreparedStatement stmnt = conn.prepareStatement(buff.toString());
 			stmnt.execute();
 			conn.close();
 		} catch (SQLException e) {
 			throw new CrashException("SQLException in updateXMLTable method!");
-		}*/
-		System.out.println("Updating old record");
+		}
 	}
 
 	public static ArrayList<XMLReturn> getXML(Database database) throws CrashException {
@@ -116,7 +115,7 @@ public class Loader {
 			Table table = source.getTable();
 			ArrayList<Column> columns = table.getColumns();
 			StringBuffer buff = new StringBuffer();
-			buff.append("SELECT TOP 1000 ");
+			buff.append("SELECT ");
 			for (int i = 0; i < columns.size(); i++) {
 				if (i != 0) {
 					buff.append(", ");
@@ -131,9 +130,9 @@ public class Loader {
 				String xmlPayload = null;
 				for (int i = 0; i < columns.size(); i++) {
 					if (columns.get(i).getLookUpKey().equals("XML")) {
-						xmlPayload = rs.getString(i+1);
+						xmlPayload = rs.getString(i + 1);
 					} else {
-						variableMap.put(columns.get(i).getLookUpKey(), rs.getString(i+1));
+						variableMap.put(columns.get(i).getLookUpKey(), rs.getString(i + 1));
 					}
 				}
 				orderedList.add(new XMLReturn(variableMap, xmlPayload));
@@ -170,13 +169,13 @@ public class Loader {
 			conn.close();
 
 		} catch (SQLException e) {
-			//No need to worry (Some filtering work could be here)
+			e.printStackTrace();
 		} finally {
-			if(conn != null) {
+			if (conn != null) {
 				try {
 					conn.close();
 				} catch (SQLException e) {
-					//No need to worry
+					// No need to worry
 				}
 			}
 		}

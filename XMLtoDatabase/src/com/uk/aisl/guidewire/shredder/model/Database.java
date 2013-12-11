@@ -70,8 +70,7 @@ public class Database {
 	}
 		
 	public String getLookUpValue(String key) {
-		LookUp lookup = this.lookUps.get(key);
-		return lookup.getValue();
+		return this.lookUps.get(key).getValue();
 	}
 	
 	public void setLookUpValue(String key, String value) {

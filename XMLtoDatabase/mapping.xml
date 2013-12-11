@@ -21,7 +21,7 @@
 				<name>Type</name>
 				<variablelookupkey>TransType</variablelookupkey>
 			</column>
-			<clause>WHERE Type = 'PolicyQuoted'</clause>
+			<clause>WHERE ID = '505243'</clause>
 		</table>
 	</sourcedatabase>
 	<database>
@@ -69,7 +69,7 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>CreateTime[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>CreditScore</name>
@@ -82,7 +82,7 @@
 			<column>
 				<name>EISEditEffDate</name>
 				<xpath>EISEditEffectiveDateExt[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>EISPolicyTermNumber</name>
@@ -115,17 +115,17 @@
 			<column>
 				<name>PolExpDate</name>
 				<xpath>(PeriodEnd)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>PolEffDate</name>
 				<xpath>(PeriodStart)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>RateAsOfDate</name>
 				<xpath>(RateAsOfDate)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>Status</name>
@@ -158,7 +158,7 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>ValidQuote</name>
@@ -167,7 +167,7 @@
 			<column>
 				<name>WrittenDate</name>
 				<xpath>(WrittenDate)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>AccountID</name>
@@ -272,22 +272,22 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>(CreateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>EffDate</name>
 				<xpath>(EffDate)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>ExpDate</name>
 				<xpath>(ExpDate)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>PostedDate</name>
 				<xpath>(PostedDate)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>PATransPublicID</name>
@@ -300,12 +300,12 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>WrittenDate</name>
 				<xpath>(WrittenDate)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>PACostID</name>
@@ -326,7 +326,7 @@
 			<column>
 				<name>PACostCreateTime</name>
 				<xpath>(PACost/CreateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>ActualAdjRate</name>
@@ -359,7 +359,7 @@
 			<column>
 				<name>PACostUpdateTime</name>
 				<xpath>(PACost/UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>CovID</name>
@@ -468,7 +468,7 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>(CreateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>CreditScoreExt</name>
@@ -577,7 +577,7 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>WebQuoteID</name>
@@ -622,7 +622,7 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>(CreateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>IncidentDescription</name>
@@ -631,7 +631,7 @@
 			<column>
 				<name>OccurrenceDate</name>
 				<xpath>(OccurenceDate)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>OtherDriver</name>
@@ -652,7 +652,7 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>PolicyDriverID</name>
@@ -721,7 +721,7 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>CreateTime[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>DMAExt</name>
@@ -738,7 +738,7 @@
 			<column>
 				<name>ExpDate</name>
 				<xpath>ExpirationDate[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>GarageLocationCounty</name>
@@ -795,7 +795,7 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>UpdateTime[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>VIN</name>
@@ -840,7 +840,7 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/CreateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
 				<name>AccountContactID</name>
@@ -857,7 +857,7 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 		</table>
 		<table>
@@ -890,7 +890,7 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>CreateTime[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>Age</name>
@@ -1047,7 +1047,7 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>UpdateTime[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>FirstName</name>
@@ -1128,7 +1128,7 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>(AccountLocation/CreateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>PhoneNumber</name>
@@ -1149,7 +1149,7 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(AccountLocation/UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>s
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>s
 			</column>
 		</table>
 		<table>
@@ -1174,7 +1174,7 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>(CreateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>PolAddPublicID</name>
@@ -1183,7 +1183,7 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>AddressLine1</name>
@@ -1240,7 +1240,7 @@
 			<column>
 				<name>CreateTime</name>
 				<xpath>(AccountContactRole/CreateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>AcctContactRolePublicID</name>
@@ -1249,7 +1249,7 @@
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(AccountContactRole/UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>AcctContactID</name>
@@ -1282,7 +1282,7 @@
 			<column>
 				<name>ContactCreateTime</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/CreateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>HomePhone</name>
@@ -1311,12 +1311,12 @@
 			<column>
 				<name>ContactUpdateTime</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>DateOfBirth</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/entity-Person/DateOfBirth)[1]</xpath>
-				<type>dateadd(mi, datediff(mi,getutcdate(),getdate()),convert(datetime2, ?))</type>
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>	
 			<column>
 				<name>FirstName</name>
