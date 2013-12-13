@@ -2,6 +2,13 @@ package com.uk.aisl.guidewire.shredder.designer;
 
 public class Printer {
 
+	/**
+	 * The most important part of the entire project is this class. It was hand
+	 * crafter by the Welsh men hereby known as Shredder's Minions. <br/>
+	 * <br/>
+	 * It prints at the start of running so you can quickly find the start of a
+	 * single execution log.
+	 */
 	public static void printTheShredder() {
 		System.out.println("                                                               " + System.lineSeparator()
 				+ "                THE SHREDDER RETURNS IN                                 " + System.lineSeparator()

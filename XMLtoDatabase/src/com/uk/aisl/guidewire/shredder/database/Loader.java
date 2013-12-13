@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
+import com.uk.aisl.guidewire.shredder.exception.Logger;
 import com.uk.aisl.guidewire.shredder.model.Column;
 import com.uk.aisl.guidewire.shredder.model.Database;
 import com.uk.aisl.guidewire.shredder.model.SourceDatabase;
@@ -16,6 +17,18 @@ import com.uk.aisl.guidewire.shredder.model.XMLReturn;
 
 public class Loader {
 
+	/**
+	 * Creates the insert statements dynamically based on the structure and
+	 * order outlined in mapping.xml. <br/>
+	 * <br/>
+	 * This will correctly map the values to the column/table name and their
+	 * corresponding values
+	 * 
+	 * @param database
+	 *            The database wrapper object that wraps all database
+	 *            information (source & target) and the destination values
+	 * @return A list of string insert statements
+	 */
 	private static ArrayList<String> createStatements(Database database) {
 
 		ArrayList<String> statements = new ArrayList<String>();
@@ -60,6 +73,24 @@ public class Loader {
 
 	}
 
+	/**
+	 * Method that attempts to guess the data type that needs to be inserted.
+	 * Depending on the data type different wrappers need to be used in the
+	 * insert statement.<br/>
+	 * <br/>
+	 * Examples: <br/>
+	 * VARCHAR = 'Value'<br/>
+	 * Integer = 1 <br/>
+	 * Bit (True) = 1<br/>
+	 * Bit (False) = 0<br/>
+	 * Empty String ('') = null<br/>
+	 * null = null
+	 * 
+	 * @param value
+	 *            The value that needs to be used to identify it's type.
+	 * @return The String of the correctly formed values to be used in the
+	 *         insert statement
+	 */
 	private static String guessValueType(String value) {
 		if (value == null) {
 			return value + ",";
@@ -89,24 +120,17 @@ public class Loader {
 		}
 	}
 
-	private static void updateXMLTable(Database database) throws CrashException {
-		try {
-			Connection conn = ConnectionManager.getSourceConnection(database);
-			SourceDatabase source = database.getSource();
-			StringBuffer buff = new StringBuffer();
-			buff.append("Update " + "[" + source.getSchema() + "].");
-			buff.append("[" + source.getTable().getName() + "] SET ");
-			buff.append("[EDWProcessTime] = getDate() WHERE TransID = \"");
-			buff.append(database.getLookUpValue("TransID"));
-			buff.append("\"");
-			PreparedStatement stmnt = conn.prepareStatement(buff.toString());
-			stmnt.execute();
-			conn.close();
-		} catch (SQLException e) {
-			throw new CrashException("SQLException in updateXMLTable method!");
-		}
-	}
-
+	/**
+	 * This method gets the XML pay load from the source database. Using clause
+	 * to subset the return set.
+	 * 
+	 * @param database
+	 *            The database wrapper object that wraps all database
+	 *            information (source & target) and the destination values
+	 * @return The list of XMLReturn objects with their XML pay loads for
+	 *         parsing
+	 * @throws CrashException
+	 */
 	public static ArrayList<XMLReturn> getXML(Database database) throws CrashException {
 		ArrayList<XMLReturn> orderedList = new ArrayList<XMLReturn>();
 		try {
@@ -137,39 +161,61 @@ public class Loader {
 				}
 				orderedList.add(new XMLReturn(variableMap, xmlPayload));
 			}
-			conn.close();
 			rs.close();
 			stmnt.close();
+			conn.close();
 
 		} catch (SQLException e) {
-			throw new CrashException("SQL Exception in getXML method!", e);
+			throw new CrashException("Unable to get list of XML pay loads. Is there an issue with the database?", e);
 		}
 		return orderedList;
 	}
 
-	public static boolean insertToStaging(Database database) throws CrashException {
+	/**
+	 * Method executes the statements created by the createStatement method.
+	 * This method also update the process date of the source XML pay load table
+	 * if it successfully inserted all records.
+	 * 
+	 * @param database
+	 *            The database wrapper object that wraps all database
+	 *            information (source & target) and the destination values
+	 * @return True if inserting succeeded and update or else false
+	 */
+	public static boolean insertToStaging(Database database) {
 		boolean success = true;
 		Connection conn = null;
 		try {
 			conn = ConnectionManager.getTargetConnection(database);
-
+			conn.setAutoCommit(false);
 			ArrayList<String> statements = createStatements(database);
 			for (String s : statements) {
 				System.out.println(s);
 				PreparedStatement stmnt = conn.prepareStatement(s);
-				int rowCount = stmnt.executeUpdate();
-				if (rowCount == 0) {
+				try {
+					int rowCount = stmnt.executeUpdate();
+					if (rowCount == 0) {
+						success = false;
+					}
+				} catch (SQLException e) {
+					Logger.error("Failed to execute Insert record.", e);
 					success = false;
-				} else {
-					updateXMLTable(database);
 				}
 				stmnt.close();
 			}
-
+			if (success) {
+				conn.commit();
+				boolean updateSuccessful = updateXMLTable(database);
+				if (!updateSuccessful) {
+					// Update the process date failed
+					Logger.error("Insert was a success but update process date failed");
+				}
+			} else {
+				conn.rollback();
+			}
 			conn.close();
-
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Logger.error("Error occured with opening a connection to the database.", e);
+			success = false;
 		} finally {
 			if (conn != null) {
 				try {
@@ -183,4 +229,39 @@ public class Loader {
 		return success;
 	}
 
+	/**
+	 * Updates the source table with process date = getDate() SQL method.
+	 * 
+	 * @param database
+	 *            The database wrapper object that wraps all database
+	 *            information (source & target) and the destination values
+	 * @throws CrashException
+	 */
+	private static boolean updateXMLTable(Database database) {
+		boolean success = false;
+		try {
+			Connection conn = ConnectionManager.getSourceConnection(database);
+			conn.setAutoCommit(false);
+			SourceDatabase source = database.getSource();
+			StringBuffer buff = new StringBuffer();
+			buff.append("Update " + "[" + source.getSchema() + "].");
+			buff.append("[" + source.getTable().getName() + "] SET ");
+			buff.append("[EDWProcessTime] = getDate() WHERE TransID = \"");
+			buff.append(database.getLookUpValue("TransID"));
+			buff.append("\"");
+			PreparedStatement stmnt = conn.prepareStatement(buff.toString());
+			int rowsAffected = stmnt.executeUpdate();
+			if (rowsAffected == 1) {
+				success = true;
+				conn.commit();
+			} else {
+				conn.rollback();
+			}
+			stmnt.close();
+			conn.close();
+		} catch (SQLException e) {
+			Logger.error("Failed to update the record after a successful update", e);
+		}
+		return success;
+	}
 }

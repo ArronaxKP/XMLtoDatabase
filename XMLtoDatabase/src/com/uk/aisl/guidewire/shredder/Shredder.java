@@ -11,8 +11,28 @@ import com.uk.aisl.guidewire.shredder.model.XMLReturn;
 import com.uk.aisl.guidewire.shredder.xml.MapperXML;
 import com.uk.aisl.guidewire.shredder.xml.Parser;
 
-public class Shredder {	
+/**
+ * Main class that holds only the main method to kick off the shreding of the
+ * pay load XML
+ * 
+ * @author Karl Parry
+ * @author Gareth Edwards
+ * 
+ */
+public class Shredder {
 
+	/**
+	 * Main method that starts the shredder. The Shredder is designed to read
+	 * the mapping.xml file (located at the same root directory as the jar) and
+	 * parse the XML pay load defined in the mapping XML. <br/>
+	 * <br/>
+	 * It is designed to parse the XML from PolicyCenter's GX model to
+	 * Elephant.com's DataWarehouse originally. It is mostly dynamic but could
+	 * be further refined to be more dynamic using the mapping.xml
+	 * 
+	 * @param args
+	 *            No parameters are read from this list at run time
+	 */
 	public static void main(String args[]) {
 		Printer.printTheShredder();
 		long start = System.currentTimeMillis();
@@ -21,13 +41,13 @@ public class Shredder {
 			database = MapperXML.parseMapperXML("mapping.xml");
 			try {
 				ArrayList<XMLReturn> list = Loader.getXML(database);
-				for(XMLReturn returnXML: list){
+				for (XMLReturn returnXML : list) {
 					Parser parser = new Parser(returnXML.getXmlPayload());
 					parser.parseXML(database, returnXML.getVariableMap());
-					if(Loader.insertToStaging(database)) {
-						//Inserting success
+					if (Loader.insertToStaging(database)) {
+						// Inserting success
 					} else {
-						System.out.println("Failure occured");
+						Logger.error("Failed to insert records");
 					}
 					database.cleanDown();
 				}
@@ -39,7 +59,7 @@ public class Shredder {
 			Logger.crash(e);
 			System.exit(1);
 		} catch (Exception e) {
-			Logger.crash("Unknown Error occurred",e);
+			Logger.crash("Unknown Error occurred", e);
 			System.exit(1);
 		}
 		long end = System.currentTimeMillis();

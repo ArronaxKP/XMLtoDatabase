@@ -5,6 +5,11 @@ public class Logger {
 	public static void error(String errorMessage) {
 		System.err.println(errorMessage);
 	}
+	
+	public static void error(String errorMessage, Exception exception) {
+		System.err.println(errorMessage);
+		exception.printStackTrace();
+	}
 
 	public static void log(String message) {
 		System.out.println(message);
