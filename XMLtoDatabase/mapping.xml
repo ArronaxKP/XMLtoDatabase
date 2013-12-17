@@ -50,7 +50,6 @@
 				<name>DataLoadDate</name>
 				<sql>GETDATE()</sql>
 			</column>
-			<clause>WHERE ID = '505243'</clause>
 		</table>
 	</errordatabase>
 	<database>

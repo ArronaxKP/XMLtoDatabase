@@ -150,6 +150,7 @@ public class Loader {
 				buff.append(columns.get(i).getColumnName());
 			}
 			buff.append(" FROM [" + source.getSchema() + "].[" + table.getName() + "] " + table.getClause());
+			Logger.debug(buff.toString());
 			stmnt = conn.prepareStatement(buff.toString());
 			rs = stmnt.executeQuery();
 			while (rs.next()) {
@@ -211,7 +212,7 @@ public class Loader {
 			conn.setAutoCommit(false);
 			ArrayList<String> statements = createStatements(database);
 			for (String s : statements) {
-				System.out.println(s);
+				Logger.debug(s);
 				stmnt = conn.prepareStatement(s);
 				try {
 					int rowCount = stmnt.executeUpdate();
@@ -219,10 +220,9 @@ public class Loader {
 						success = false;
 					}
 				} catch (SQLException e) {
-					Logger.error("Failed to execute Insert record.", e);
-					success = false;
 					stmnt.close();
-					break;
+					conn.close();
+					throw new CrashException("Failed to execute Insert record.", e);
 				}
 				stmnt.close();
 			}
@@ -307,13 +307,16 @@ public class Loader {
 		PreparedStatement stmnt = null;
 		try {
 			conn = ConnectionManager.getTargetConnection(database);
+			conn.setAutoCommit(false);
 			String sqlCommand = database.getError().getErrorSQLString(e);
-			System.out.println(sqlCommand);
+			Logger.debug(sqlCommand);
 			stmnt = conn.prepareStatement(sqlCommand);
 			int rowCount = stmnt.executeUpdate();
 			if (rowCount != 1) {
 				String ID = database.getLookUpValue("transid");
-				Logger.superError("Failed to add error entry. TransID = "+ID, new Exception());
+				Logger.superError("Failed to add error entry. TransID = "+ID);
+			} else {
+				conn.commit();
 			}
 		} catch (SQLException ex) {
 			String ID = database.getLookUpValue("transid");

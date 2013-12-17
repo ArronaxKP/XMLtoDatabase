@@ -1,5 +1,7 @@
 package com.uk.aisl.guidewire.shredder.designer;
 
+import com.uk.aisl.guidewire.shredder.exception.Logger;
+
 public class Printer {
 
 	/**
@@ -10,7 +12,7 @@ public class Printer {
 	 * single execution log.
 	 */
 	public static void printTheShredder() {
-		System.out.println("                                                               " + System.lineSeparator()
+		Logger.info("                                                               " + System.lineSeparator()
 				+ "                THE SHREDDER RETURNS IN                                 " + System.lineSeparator()
 				+ "             Teenage Mutant Ninja Turtles:                              " + System.lineSeparator()
 				+ "                      XM-HELL                                           " + System.lineSeparator()

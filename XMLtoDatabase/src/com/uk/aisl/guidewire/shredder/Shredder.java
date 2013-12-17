@@ -38,33 +38,34 @@ public class Shredder {
 		long start = System.currentTimeMillis();
 		Database database = null;
 		try {
+			Logger.info("Beginning parsing mapping.xml");
 			database = MapperXML.parseMapperXML("mapping.xml");
-			try {
-				ArrayList<XMLReturn> list = Loader.getXML(database);
-				for (XMLReturn returnXML : list) {
-					try{
-						database.setXML(returnXML);
-						Parser parser = new Parser(returnXML.getXmlPayload());
-						database = parser.parseXML(database, returnXML.getVariableMap());
-						Loader.insertToStaging(database);
-					} catch (CrashException e) {
-						Loader.logError(database, e);
-					}
-					database.cleanDown();
+			Logger.info("Finished parsing mapping.xml");
+			Logger.info("Beginning to get payload xml from Database");
+			ArrayList<XMLReturn> list = Loader.getXML(database);
+			Logger.info("Finished getting payload xml from Database");
+			for (XMLReturn returnXML : list) {
+				Logger.info("Beginning parsing payload xml for "+returnXML.getVariableMap().get("transid"));
+				try{
+					database.setXML(returnXML);
+					Parser parser = new Parser(returnXML.getXmlPayload());
+					database = parser.parseXML(database, returnXML.getVariableMap());
+					Loader.insertToStaging(database);
+				} catch (CrashException e) {
+					Loader.logError(database, e);
 				}
-			} catch (CrashException e) {
-				Logger.crash(e);
-				System.exit(1);
+				database.cleanDown();
+				Logger.info("Finished parsing payload xml for "+returnXML.getVariableMap().get("transid"));
 			}
 		} catch (CrashException e) {
-			Logger.crash(e);
+			Logger.crash("Crash exception occured", e);
 			System.exit(1);
 		} catch (Exception e) {
 			Logger.crash("Unknown Error occurred", e);
 			System.exit(1);
 		}
 		long end = System.currentTimeMillis();
-		Logger.log("Job ended in: " + (end - start) + " ms");
+		Logger.info("Job ended in: " + (end - start) + " ms");
 		System.exit(0);
 	}
 }
