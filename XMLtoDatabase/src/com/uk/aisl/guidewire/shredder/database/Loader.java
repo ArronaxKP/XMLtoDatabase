@@ -221,6 +221,8 @@ public class Loader {
 				} catch (SQLException e) {
 					Logger.error("Failed to execute Insert record.", e);
 					success = false;
+					stmnt.close();
+					break;
 				}
 				stmnt.close();
 			}
