@@ -93,17 +93,17 @@ public class Loader {
 	 */
 	private static String guessValueType(String value) {
 		if (value == null) {
-			return value + ",";
+			return "null,";
 		} else {
 			if (value.equals("")) {
-				return null + ",";
+				return "null,";
 			} else {
 				try {
 					Integer.parseInt(value);
 					return value + ",";
 				} catch (NumberFormatException e) {
 					if (value.equals("null")) {
-						return null + ",";
+						return "null,";
 					} else {
 						if (value.equalsIgnoreCase("true")) {
 							return 1 + ",";
@@ -133,8 +133,11 @@ public class Loader {
 	 */
 	public static ArrayList<XMLReturn> getXML(Database database) throws CrashException {
 		ArrayList<XMLReturn> orderedList = new ArrayList<XMLReturn>();
+		Connection conn = null;
+		PreparedStatement stmnt = null;
+		ResultSet rs = null;
 		try {
-			Connection conn = ConnectionManager.getSourceConnection(database);
+			conn = ConnectionManager.getSourceConnection(database);
 			SourceDatabase source = database.getSource();
 			Table table = source.getTable();
 			ArrayList<Column> columns = table.getColumns();
@@ -147,8 +150,8 @@ public class Loader {
 				buff.append(columns.get(i).getColumnName());
 			}
 			buff.append(" FROM [" + source.getSchema() + "].[" + table.getName() + "] " + table.getClause());
-			PreparedStatement stmnt = conn.prepareStatement(buff.toString());
-			ResultSet rs = stmnt.executeQuery();
+			stmnt = conn.prepareStatement(buff.toString());
+			rs = stmnt.executeQuery();
 			while (rs.next()) {
 				HashMap<String, String> variableMap = new HashMap<String, String>(97);
 				String xmlPayload = null;
@@ -167,6 +170,23 @@ public class Loader {
 
 		} catch (SQLException e) {
 			throw new CrashException("Unable to get list of XML pay loads. Is there an issue with the database?", e);
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {}
+			}
+			if (stmnt != null) {
+				try {
+					stmnt.close();
+				} catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {}
+			}
+
 		}
 		return orderedList;
 	}
@@ -180,17 +200,19 @@ public class Loader {
 	 *            The database wrapper object that wraps all database
 	 *            information (source & target) and the destination values
 	 * @return True if inserting succeeded and update or else false
+	 * @throws CrashException
 	 */
-	public static boolean insertToStaging(Database database) {
+	public static void insertToStaging(Database database) throws CrashException {
 		boolean success = true;
 		Connection conn = null;
+		PreparedStatement stmnt = null;
 		try {
 			conn = ConnectionManager.getTargetConnection(database);
 			conn.setAutoCommit(false);
 			ArrayList<String> statements = createStatements(database);
 			for (String s : statements) {
 				System.out.println(s);
-				PreparedStatement stmnt = conn.prepareStatement(s);
+				stmnt = conn.prepareStatement(s);
 				try {
 					int rowCount = stmnt.executeUpdate();
 					if (rowCount == 0) {
@@ -206,27 +228,26 @@ public class Loader {
 				conn.commit();
 				boolean updateSuccessful = updateXMLTable(database);
 				if (!updateSuccessful) {
-					// Update the process date failed
-					Logger.error("Insert was a success but update process date failed");
+					throw new CrashException("Insert was a success but update process date failed");
 				}
 			} else {
 				conn.rollback();
 			}
 			conn.close();
 		} catch (SQLException e) {
-			Logger.error("Error occured with opening a connection to the database.", e);
-			success = false;
+			throw new CrashException("Error occured with opening a connection to the database.", e);
 		} finally {
+			if (stmnt != null) {
+				try {
+					stmnt.close();
+				} catch (SQLException e) {}
+			}
 			if (conn != null) {
 				try {
 					conn.close();
-				} catch (SQLException e) {
-					// No need to worry
-				}
+				} catch (SQLException e) {}
 			}
 		}
-
-		return success;
 	}
 
 	/**
@@ -239,8 +260,10 @@ public class Loader {
 	 */
 	private static boolean updateXMLTable(Database database) {
 		boolean success = false;
+		Connection conn = null;
+		PreparedStatement stmnt = null;
 		try {
-			Connection conn = ConnectionManager.getSourceConnection(database);
+			conn = ConnectionManager.getSourceConnection(database);
 			conn.setAutoCommit(false);
 			SourceDatabase source = database.getSource();
 			StringBuffer buff = new StringBuffer();
@@ -249,7 +272,7 @@ public class Loader {
 			buff.append("[EDWProcessTime] = getDate() WHERE TransID = \"");
 			buff.append(database.getLookUpValue("TransID"));
 			buff.append("\"");
-			PreparedStatement stmnt = conn.prepareStatement(buff.toString());
+			stmnt = conn.prepareStatement(buff.toString());
 			int rowsAffected = stmnt.executeUpdate();
 			if (rowsAffected == 1) {
 				success = true;
@@ -261,7 +284,43 @@ public class Loader {
 			conn.close();
 		} catch (SQLException e) {
 			Logger.error("Failed to update the record after a successful update", e);
+		} finally {
+			if (stmnt != null) {
+				try {
+					stmnt.close();
+				} catch (SQLException e) {}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {}
+			}
+
 		}
 		return success;
+	}
+
+	public static void logError(Database database, CrashException e) {
+		Connection conn = null;
+		PreparedStatement stmnt = null;
+		try {
+			conn = ConnectionManager.getTargetConnection(database);
+			stmnt = conn.prepareStatement(database.getError().getErrorSQLString(e));
+		} catch (SQLException ex) {
+			String ID = database.getLookUpValue("transid");
+			Logger.superError("Failed to add error entry. TransID = "+ID, ex);
+		} finally {
+			if (stmnt != null) {
+				try {
+					stmnt.close();
+				} catch (SQLException ex) {}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException ex) {}
+			}
+		}
+
 	}
 }

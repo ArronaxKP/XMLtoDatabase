@@ -108,5 +108,7 @@ public class ConnectionManager {
 		sourceDatabase.setUser(source.getUsername());
 		sourceDatabase.setPassword(source.getPassword());
 	}
+	
+	
 
 }

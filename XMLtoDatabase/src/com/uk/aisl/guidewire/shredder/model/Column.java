@@ -8,6 +8,8 @@ public class Column {
 	private String type;
 	private ArrayList<String> values;
 	private String lookUpKey;
+	private String sql;
+	private String specialValue;
 
 	public Column () {
 		this.values = new ArrayList<String>();
@@ -65,5 +67,21 @@ public class Column {
 
 	public void cleanDown() {
 		this.values = null;
+	}
+
+	public String getSql() {
+		return sql;
+	}
+
+	public void setSql(String sql) {
+		this.sql = sql;
+	}
+
+	public String getSpecialValue() {
+		return specialValue;
+	}
+
+	public void setSpecialValue(String specialValue) {
+		this.specialValue = specialValue;
 	}
 }

@@ -3,6 +3,7 @@ package com.uk.aisl.guidewire.shredder.xml;
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
 import com.uk.aisl.guidewire.shredder.model.Column;
 import com.uk.aisl.guidewire.shredder.model.Database;
+import com.uk.aisl.guidewire.shredder.model.ErrorDatabase;
 import com.uk.aisl.guidewire.shredder.model.LookUp;
 import com.uk.aisl.guidewire.shredder.model.SourceDatabase;
 import com.uk.aisl.guidewire.shredder.model.Table;
@@ -26,6 +27,7 @@ public class MapperXML {
 				MapperXML.getSourceDatabaseValues(database, vn);
 				MapperXML.getDatabaseValues(database, vn);
 				MapperXML.fillInLookUps(database, vn);
+				MapperXML.getErrorHandling(database, vn);
 				//needs some work
 				AutoPilot ap = new AutoPilot();
 				ap.selectXPath("//shredder/database/table");
@@ -47,6 +49,48 @@ public class MapperXML {
 			throw new CrashException("VTD-XML failed to parse the MapperXML. Is the Path correct: " + path);
 		}
 		return database;
+	}
+
+	private static void getErrorHandling(Database database, VTDNav vn) throws XPathParseException, XPathEvalException, NavException {
+		ErrorDatabase errorDatabase = new ErrorDatabase(database);
+		AutoPilot apString = new AutoPilot();
+		apString.selectXPath("//shredder/database/errorhandle/errorstring");
+		apString.bind(vn);
+		errorDatabase.setErrorSQLString(apString.evalXPathToString());
+		apString.resetXPath();
+		
+		AutoPilot ap = new AutoPilot();
+		ap.selectXPath("//shredder/database/errorhandle/column");
+		ap.bind(vn);
+		
+		while (ap.evalXPath() != -1) {
+			Column column = new Column();
+			AutoPilot apColumnName = new AutoPilot();
+			apColumnName.selectXPath("name");
+			apColumnName.bind(vn);
+			column.setColumnName(apColumnName.evalXPathToString());
+			apColumnName.resetXPath();
+			
+			AutoPilot apSpecialValue = new AutoPilot();
+			apSpecialValue.selectXPath("specialvalue");
+			apSpecialValue.bind(vn);
+			column.setSpecialValue(apSpecialValue.evalXPathToString());
+			apSpecialValue.resetXPath();
+			
+			AutoPilot apSQL = new AutoPilot();
+			apSQL.selectXPath("sql");
+			apSQL.bind(vn);
+			column.setSql(apSQL.evalXPathToString());
+			apSQL.resetXPath();
+			
+			AutoPilot apLookUp = new AutoPilot();
+			apLookUp.selectXPath("lookup");
+			apLookUp.bind(vn);
+			column.setLookUpKey(apLookUp.evalXPathToString());
+			apLookUp.resetXPath();
+			errorDatabase.addColumn(column);
+		}
+		vn.toElement(VTDNav.ROOT);
 	}
 
 	private static void getSourceDatabaseValues(Database database, VTDNav vn) throws XPathParseException, XPathEvalException, NavException {

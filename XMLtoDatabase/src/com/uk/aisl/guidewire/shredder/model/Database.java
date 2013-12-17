@@ -7,6 +7,7 @@ public class Database {
 
 	private ArrayList<Table> tables;
 	private SourceDatabase source;
+	private ErrorDatabase error;
 	
 	private String databaseName;
 	private String serverName;
@@ -17,6 +18,7 @@ public class Database {
 	
 	private HashMap<String, LookUp> lookUps;
 	private ArrayList<String> lookUpKeys;
+	private String XML;
 
 	public Database() {
 		this.tables = new ArrayList<Table>();
@@ -82,6 +84,7 @@ public class Database {
 	}
 
 	public void cleanDown() {
+		this.XML = null;
 		for(String key: this.lookUpKeys) {
 			this.lookUps.get(key).setValue(null);
 		}
@@ -106,6 +109,14 @@ public class Database {
 	public void setSource(SourceDatabase source) {
 		this.source = source;
 	}
+	
+	public ErrorDatabase getError() {
+		return this.error;
+	}
+	
+	public void setError(ErrorDatabase error) {
+		this.error = error;
+	}
 
 	public String getUsername() {
 		return username;
@@ -121,5 +132,14 @@ public class Database {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public void setXML(XMLReturn returnXML) {
+		this.XML = returnXML.getXmlPayload();
+		
+	}
+
+	public String getXML() {
+		return XML;
 	}
 }

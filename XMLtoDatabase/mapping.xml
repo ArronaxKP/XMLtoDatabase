@@ -47,6 +47,25 @@
 			<key>accountid</key>
 			<xpath>//PolicyPeriod/Policy/Account/ID/Value</xpath>
 		</lookupfield>
+		<errorhandle>
+			<errorstring>INSERT INTO [ErrorTracking].[dbo].[ErrorXMLTransactions] ( ?COLUMNS? ) VALUES ( ?VALUES? )</errorstring>
+			<column>
+				<name>XMLPayload</name>
+				<specialvalue>XML</specialvalue>
+			</column>
+			<column>
+				<name>ID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>Error</name>
+				<specialvalue>ERROR</specialvalue>
+			</column>
+			<column>
+				<name>DataLoadDate</name>
+				<sql>GETDATE()</sql>
+			</column>
+		</errorhandle>
 		<table>
 			<name>PolicyPeriod</name>
 			<rootxpath>//PolicyPeriod</rootxpath>
@@ -816,14 +835,16 @@
 			<column>
 				<name>AccountID</name>
 				<lookup>accountid</lookup>
-			</column>	
+			</column>
 			<column>
 				<name>VehID</name>
-				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/ID/Value)[1]</xpath>
+				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/ID/Value)[1]
+				</xpath>
 			</column>
 			<column>
 				<name>VehFixedID</name>
-				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/FixedId/Value)[1]</xpath>
+				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/FixedId/Value)[1]
+				</xpath>
 			</column>
 			<column>
 				<name>ID</name>
@@ -839,7 +860,8 @@
 			</column>
 			<column>
 				<name>CreateTime</name>
-				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/CreateTime)[1]</xpath>
+				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/CreateTime)[1]
+				</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 			<column>
@@ -856,13 +878,14 @@
 			</column>
 			<column>
 				<name>UpdateTime</name>
-				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/UpdateTime)[1]</xpath>
+				<xpath>(//PolicyPeriod/PersonalAutoLine/Vehicles/Entry[AdditionalInterests/Entry/ID/Value=//PolicyPeriod/PersonalAutoLine/Vehicles/Entry/AdditionalInterests/Entry/ID/Value]/UpdateTime)[1]
+				</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 		</table>
 		<table>
 			<name>PolicyDrivers</name>
-			<rootxpath>//PolicyPeriod/PersonalAutoLine/PolicyDrivers/Entry</rootxpath>	
+			<rootxpath>//PolicyPeriod/PersonalAutoLine/PolicyDrivers/Entry</rootxpath>
 			<column>
 				<name>TransID</name>
 				<lookup>transid</lookup>
@@ -878,197 +901,197 @@
 			<column>
 				<name>PolDriverID</name>
 				<xpath>(ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>BasedOnID</name>
 				<xpath>(BasedOn/ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>FixedID</name>
 				<xpath>(FixedId/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>CreateTime</name>
 				<xpath>CreateTime[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>Age</name>
 				<xpath>Age[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AgeFirstLicensed</name>
 				<xpath>AgeFirstLicensedExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AssocPrimVehID</name>
 				<xpath>(AssociatedPrimaryVehicleExt/ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>BIPointsExt</name>
 				<xpath>BIPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>CMPPointsExt</name>
 				<xpath>CMPPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>ColPointsExt</name>
 				<xpath>ColPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>creditTierExt</name>
 				<xpath>CreditTierExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>CustPointsExt</name>
 				<xpath>CustPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>LoanPointsExt</name>
 				<xpath>LoanPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>MedPointsExt</name>
 				<xpath>MedPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>PDPointsExt</name>
 				<xpath>PDPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>PIPMDPointsExt</name>
 				<xpath>PIPMDPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>PIPTXPointsExt</name>
 				<xpath>PIPTXPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>RentPointsExt</name>
 				<xpath>RentPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>UMBIPointsExt</name>
 				<xpath>UMBIPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>UMPDPointsExt</name>
 				<xpath>UMPDPointsExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>DriverClassFactor</name>
 				<xpath>DriverClassFactorExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>Excluded</name>
 				<xpath>Excluded[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>DiscGoodStudent</name>
 				<xpath>GoodStudentDiscountExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>Education</name>
 				<xpath>HighestLevelOfEducationExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>FR19</name>
 				<xpath>Fr19Ext[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>FR44</name>
 				<xpath>Fr44Ext[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>LicenseNumber</name>
 				<xpath>LicenseNumber[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>LicenseState</name>
 				<xpath>LicenseState[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>LicenseStatus</name>
 				<xpath>LicenseStatusExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>MVROrdered</name>
 				<xpath>MVROrderStatus[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>MaritalExt</name>
 				<xpath>MaritalExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>OccupationGroup</name>
 				<xpath>occupationGroupExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>OccupationStatus</name>
 				<xpath>OccupationStatusListExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>OccupationTitle</name>
 				<xpath>OccupationTitleExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>Operator</name>
 				<xpath>Operator[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>PrimDrivPublicID</name>
 				<xpath>PublicID[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>RatedCreditTierExt</name>
 				<xpath>RatedCreditTierExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>RatingStatus</name>
 				<xpath>RatingStatusExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>Relationship</name>
 				<xpath>RelationshipToInsuredExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>SR22</name>
 				<xpath>Sr22Ext[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>TrainingClassType</name>
 				<xpath>TrainingClassType[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>YearsLicensed</name>
 				<xpath>YearsLicensedExt[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>UpdateTime</name>
 				<xpath>UpdateTime[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>FirstName</name>
 				<xpath>(FirstName)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>Gender</name>
 				<xpath>(Gender)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>MiddleName</name>
 				<xpath>(MiddleName)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>LastName</name>
 				<xpath>(LastName)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>Suffix</name>
 				<xpath>(Suffix)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>MaritalStatus</name>
 				<xpath>(MaritalStatus)[1]</xpath>
@@ -1076,7 +1099,7 @@
 		</table>
 		<table>
 			<name>AccountLocation</name>
-			<rootxpath>//PolicyPeriod/PersonalAutoLine/Vehicles/Entry</rootxpath>	
+			<rootxpath>//PolicyPeriod/PersonalAutoLine/Vehicles/Entry</rootxpath>
 			<column>
 				<name>TransID</name>
 				<lookup>transid</lookup>
@@ -1092,69 +1115,69 @@
 			<column>
 				<name>VehID</name>
 				<xpath>(ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>FixedVehID</name>
 				<xpath>(FixedId/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AcctLocationID</name>
 				<xpath>(AccountLocation/ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AddressLine1</name>
 				<xpath>(AccountLocation/AddressLine1)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AddressLine2</name>
 				<xpath>(AccountLocation/AddressLine2)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AddressType</name>
 				<xpath>(AddressType)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>City</name>
 				<xpath>(AccountLocation/City)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>County</name>
 				<xpath>(AccountLocation/County)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>Country</name>
 				<xpath>(AccountLocation/Country)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>CreateTime</name>
 				<xpath>(AccountLocation/CreateTime)[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>PhoneNumber</name>
 				<xpath>(AccountLocation/Phone)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>PostalCode</name>
 				<xpath>(AccountLocation/PostalCode)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AcctAddPublicID</name>
 				<xpath>(AccountLocation/PublicID)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>State</name>
 				<xpath>(AccountLocation/State)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(AccountLocation/UpdateTime)[1]</xpath>
-				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>s
+				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
 			</column>
 		</table>
 		<table>
 			<name>PolicyAddress</name>
-			<rootxpath>//PolicyPeriod/PolicyAddress</rootxpath>	
+			<rootxpath>//PolicyPeriod/PolicyAddress</rootxpath>
 			<column>
 				<name>TransID</name>
 				<lookup>transid</lookup>
@@ -1170,53 +1193,53 @@
 			<column>
 				<name>PolAddressID</name>
 				<xpath>(ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>CreateTime</name>
 				<xpath>(CreateTime)[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>PolAddPublicID</name>
 				<xpath>(PublicID)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(UpdateTime)[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>AddressLine1</name>
 				<xpath>(AddressLine1)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AddressLine2</name>
 				<xpath>(AddressLine2)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AddressLine3</name>
 				<xpath>(AddressLine3)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>City</name>
 				<xpath>(City)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>County</name>
 				<xpath>(County)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>PostalCode</name>
 				<xpath>(PostalCode)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>State</name>
 				<xpath>(State)[1]</xpath>
 			</column>
 		</table>
-		<table>	
+		<table>
 			<name>PolicyContact</name>
-			<rootxpath>//PolicyPeriod/PolicyContactRoles/Entry</rootxpath>	
+			<rootxpath>//PolicyPeriod/PolicyContactRoles/Entry</rootxpath>
 			<column>
 				<name>TransID</name>
 				<lookup>transid</lookup>
@@ -1232,116 +1255,116 @@
 			<column>
 				<name>PolicyContactRoleID</name>
 				<xpath>(ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AcctContactRoleID</name>
 				<xpath>(AccountContactRole/ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>CreateTime</name>
 				<xpath>(AccountContactRole/CreateTime)[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>AcctContactRolePublicID</name>
 				<xpath>(AccountContactRole/PublicID)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>UpdateTime</name>
 				<xpath>(AccountContactRole/UpdateTime)[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>AcctContactID</name>
 				<xpath>(AccountContactRole/AccountContact/ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AddressLine1</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/PrimaryAddress/AddressLine1)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>AddressLine2</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/PrimaryAddress/AddressLine2)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>City</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/PrimaryAddress/City)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>PostalCode</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/PrimaryAddress/PostalCode)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>State</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/PrimaryAddress/State)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>ContactID</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/ID/Value)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>ContactCreateTime</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/CreateTime)[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>HomePhone</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/HomePhone)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>ContactPublicID</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/PublicID)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>SSNOfficialID</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/SSNOfficialID)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>EmailAddress1</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/EmailAddress1)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>LienholderName</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/Name)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>WorkPhone</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/WorkPhone)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>ContactUpdateTime</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/UpdateTime)[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>DateOfBirth</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/entity-Person/DateOfBirth)[1]</xpath>
 				<type>dateadd(mi, datediff(mi, getutcdate(), getdate()), CONVERT(datetime2, CAST(? AS datetimeoffset), 1))</type>
-			</column>	
+			</column>
 			<column>
 				<name>FirstName</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/entity-Person/FirstName)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>Gender</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/entity-Person/Gender)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>MiddleName</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/entity-Person/MiddleName)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>LastName</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/entity-Person/LastName)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>Suffix</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/entity-Person/Suffix)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>CellPhone</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/entity-Person/CellPhone)[1]</xpath>
-			</column>	
+			</column>
 			<column>
 				<name>MaritalStatus</name>
 				<xpath>(AccountContactRole/AccountContact/Contact/entity-Person/MaritalStatus)[1]</xpath>

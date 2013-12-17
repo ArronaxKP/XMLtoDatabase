@@ -19,8 +19,13 @@ public class Logger {
 		Logger.crash(exception.getMessage(), exception);
 	}
 
-	public static void crash(String Message, Exception exception) {
-		System.err.println(exception.getMessage());
+	public static void crash(String message, Exception exception) {
+		System.err.println(message + exception.getMessage());
+		exception.printStackTrace();
+	}
+
+	public static void superError(String errorMessage, Exception exception) {
+		System.err.println("SUPER-ERROR:"+errorMessage);
 		exception.printStackTrace();
 	}
 }

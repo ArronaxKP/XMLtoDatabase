@@ -42,12 +42,14 @@ public class Shredder {
 			try {
 				ArrayList<XMLReturn> list = Loader.getXML(database);
 				for (XMLReturn returnXML : list) {
-					Parser parser = new Parser(returnXML.getXmlPayload());
-					parser.parseXML(database, returnXML.getVariableMap());
-					if (Loader.insertToStaging(database)) {
-						// Inserting success
-					} else {
-						Logger.error("Failed to insert records");
+					try{
+						database.setXML(returnXML);
+						Parser parser = new Parser(returnXML.getXmlPayload());
+						database = parser.parseXML(database, returnXML.getVariableMap());
+						Loader.insertToStaging(database);
+					} catch (CrashException e) {
+						Logger.error("Failed to parse the XML payload");
+						Loader.logError(database, e);
 					}
 					database.cleanDown();
 				}

@@ -81,9 +81,9 @@ public class Parser {
 				database.setLookUpValue(lookUpKeys.get(i), value);
 			}
 		}catch(NavException e){
-			new CrashException("Unable to complete look ups", e);
+			throw new CrashException("Unable to complete look ups", e);
 		} catch (XPathParseException e) {
-			new CrashException("Unable to complete look ups", e);
+			throw new CrashException("Unable to complete look ups", e);
 		}
 	}
 
