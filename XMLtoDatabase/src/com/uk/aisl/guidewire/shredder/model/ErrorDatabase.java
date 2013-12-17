@@ -8,21 +8,23 @@ import com.uk.aisl.guidewire.shredder.exception.Logger;
 
 public class ErrorDatabase {
 
-	private ArrayList<Column> columns;
-	private String errorSQLString;
 	private Database database;
+	private String databaseName;
+	private String serverName;
+	private String port;
+	private String schema;
+	private String username;
+	private String password;
+	private Table table;
 
 	public ErrorDatabase(Database database) {
 		this.database = database;
-		this.columns = new ArrayList<Column>();
+		//this.columns = new ArrayList<Column>();
 	}
-
-	public void setErrorSQLString(String errorSQLString) {
-		this.errorSQLString = errorSQLString;
-	}
-
+	
 	public String getErrorSQLString(Exception e) {
-		int size = this.columns.size();
+		ArrayList<Column> columns = this.table.getColumns();
+		int size = columns.size();
 		StringBuffer values = new StringBuffer();
 		StringBuffer columnNames = new StringBuffer();
 		for (int i = 0; i < size; i++) {
@@ -30,7 +32,7 @@ public class ErrorDatabase {
 				values.append(",");
 				columnNames.append(",");
 			}
-			Column column = this.columns.get(i);
+			Column column = columns.get(i);
 			columnNames.append("[").append(column.getColumnName()).append("]");
 			String sqlString = column.getSql();
 			if (!(sqlString == null || sqlString.equals(""))) {
@@ -62,14 +64,64 @@ public class ErrorDatabase {
 				values.append(database.getLookUpValue(lookUpKey));
 				continue;
 			}
-
 		}
-		this.errorSQLString = this.errorSQLString.replace("?VALUES?", values.toString()).replace("?COLUMNS?",
-				columnNames.toString());
-		return this.errorSQLString;
+		//TODO change this to dynamic built.
+		StringBuffer buff = new StringBuffer();
+		buff.append("INSERT INTO [").append(database.getSchema()).append("].[").append(this.table.getName()).append("] (");
+		buff.append(columnNames.toString()).append(") VALUES (");
+		buff.append(values.toString()).append(")");
+		return buff.toString();
+	}
+	
+	public String getDatabaseName() {
+		return databaseName;
 	}
 
-	public void addColumn(Column column) {
-		this.columns.add(column);
+	public void setDatabaseName(String databaseName) {
+		this.databaseName = databaseName;
+	}
+
+	public String getServerName() {
+		return serverName;
+	}
+
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+
+	public String getSchema() {
+		return schema;
+	}
+
+	public void setSchema(String schema) {
+		this.schema = schema;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setTable(Table table) {
+		this.table = table;
 	}
 }

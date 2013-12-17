@@ -307,7 +307,14 @@ public class Loader {
 		PreparedStatement stmnt = null;
 		try {
 			conn = ConnectionManager.getTargetConnection(database);
-			stmnt = conn.prepareStatement(database.getError().getErrorSQLString(e));
+			String sqlCommand = database.getError().getErrorSQLString(e);
+			System.out.println(sqlCommand);
+			stmnt = conn.prepareStatement(sqlCommand);
+			int rowCount = stmnt.executeUpdate();
+			if (rowCount != 1) {
+				String ID = database.getLookUpValue("transid");
+				Logger.superError("Failed to add error entry. TransID = "+ID, new Exception());
+			}
 		} catch (SQLException ex) {
 			String ID = database.getLookUpValue("transid");
 			Logger.superError("Failed to add error entry. TransID = "+ID, ex);

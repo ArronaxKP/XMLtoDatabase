@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.microsoft.sqlserver.jdbc.*;
 import com.uk.aisl.guidewire.shredder.model.Database;
+import com.uk.aisl.guidewire.shredder.model.ErrorDatabase;
 import com.uk.aisl.guidewire.shredder.model.SourceDatabase;
 
 /**
@@ -21,6 +22,7 @@ public class ConnectionManager {
 	private static ConnectionManager instance = null;
 	private SQLServerDataSource targetDatabase = new SQLServerDataSource();
 	private SQLServerDataSource sourceDatabase = new SQLServerDataSource();
+	private SQLServerDataSource errorDatabase = new SQLServerDataSource();
 
 	/**
 	 * Private constructor so can only be instantiated from internally
@@ -33,6 +35,7 @@ public class ConnectionManager {
 	private ConnectionManager(Database database) {
 		this.setUpTargetDatabase(database);
 		this.setUpSourceDatabase(database.getSource());
+		this.setUpSourceDatabase(database.getError());
 	}
 
 	/**
@@ -109,6 +112,13 @@ public class ConnectionManager {
 		sourceDatabase.setPassword(source.getPassword());
 	}
 	
+	private void setUpSourceDatabase(ErrorDatabase error) {
+		errorDatabase.setServerName(error.getServerName());
+		errorDatabase.setDatabaseName(error.getDatabaseName());
+		errorDatabase.setUser(error.getUsername());
+		errorDatabase.setPassword(error.getPassword());
+		
+	}
 	
 
 }

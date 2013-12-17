@@ -23,11 +23,11 @@ public class MapperXML {
 			// parsing succeeded
 			try {
 				VTDNav vn = vg.getNav();
-				
+
+				MapperXML.getErrorHandling(database, vn);
 				MapperXML.getSourceDatabaseValues(database, vn);
 				MapperXML.getDatabaseValues(database, vn);
 				MapperXML.fillInLookUps(database, vn);
-				MapperXML.getErrorHandling(database, vn);
 				//needs some work
 				AutoPilot ap = new AutoPilot();
 				ap.selectXPath("//shredder/database/table");
@@ -53,14 +53,51 @@ public class MapperXML {
 
 	private static void getErrorHandling(Database database, VTDNav vn) throws XPathParseException, XPathEvalException, NavException {
 		ErrorDatabase errorDatabase = new ErrorDatabase(database);
-		AutoPilot apString = new AutoPilot();
-		apString.selectXPath("//shredder/database/errorhandle/errorstring");
-		apString.bind(vn);
-		errorDatabase.setErrorSQLString(apString.evalXPathToString());
-		apString.resetXPath();
+		AutoPilot apDBName = new AutoPilot();
+		apDBName.selectXPath("//shredder/errordatabase/databasename");
+		apDBName.bind(vn);
+		errorDatabase.setDatabaseName(apDBName.evalXPathToString());
+		apDBName.resetXPath();
+		
+		AutoPilot apDBPort = new AutoPilot();
+		apDBPort.selectXPath("//shredder/errordatabase/port");
+		apDBPort.bind(vn);
+		errorDatabase.setPort(apDBPort.evalXPathToString());
+		apDBPort.resetXPath();
+		
+		AutoPilot apServerName = new AutoPilot();
+		apServerName.selectXPath("//shredder/errordatabase/servername");
+		apServerName.bind(vn);
+		errorDatabase.setServerName(apServerName.evalXPathToString());
+		apServerName.resetXPath();
+		
+		AutoPilot apSchema = new AutoPilot();
+		apSchema.selectXPath("//shredder/errordatabase/schema");
+		apSchema.bind(vn);
+		errorDatabase.setSchema(apSchema.evalXPathToString());
+		apSchema.resetXPath();
+		
+		AutoPilot apUsername = new AutoPilot();
+		apUsername.selectXPath("//shredder/errordatabase/username");
+		apUsername.bind(vn);
+		errorDatabase.setUsername(apUsername.evalXPathToString());
+		apUsername.resetXPath();
+		
+		AutoPilot apPassword = new AutoPilot();
+		apPassword.selectXPath("//shredder/errordatabase/password");
+		apPassword.bind(vn);
+		errorDatabase.setPassword(apPassword.evalXPathToString());
+		apPassword.resetXPath();
+		
+		Table table = new Table();
+		AutoPilot apTableName = new AutoPilot();
+		apTableName.selectXPath("//shredder/errordatabase/table/name");
+		apTableName.bind(vn);
+		table.setTableName(apTableName.evalXPathToString());
+		apTableName.resetXPath();
 		
 		AutoPilot ap = new AutoPilot();
-		ap.selectXPath("//shredder/database/errorhandle/column");
+		ap.selectXPath("//shredder/errordatabase/table/column");
 		ap.bind(vn);
 		
 		while (ap.evalXPath() != -1) {
@@ -88,8 +125,10 @@ public class MapperXML {
 			apLookUp.bind(vn);
 			column.setLookUpKey(apLookUp.evalXPathToString());
 			apLookUp.resetXPath();
-			errorDatabase.addColumn(column);
+			table.addColumn(column);
 		}
+		errorDatabase.setTable(table);
+		database.setError(errorDatabase);
 		vn.toElement(VTDNav.ROOT);
 	}
 

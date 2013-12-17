@@ -48,7 +48,6 @@ public class Shredder {
 						database = parser.parseXML(database, returnXML.getVariableMap());
 						Loader.insertToStaging(database);
 					} catch (CrashException e) {
-						Logger.error("Failed to parse the XML payload");
 						Loader.logError(database, e);
 					}
 					database.cleanDown();

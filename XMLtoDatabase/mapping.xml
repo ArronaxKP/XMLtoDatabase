@@ -24,6 +24,35 @@
 			<clause>WHERE ID = '505243'</clause>
 		</table>
 	</sourcedatabase>
+	<errordatabase>
+		<servername>vaqa-dw-01</servername>
+		<databasename>PC_STAGING</databasename>
+		<port>1433</port>
+		<schema>dbo</schema>
+		<username>SSIS_PC_Staging</username>
+		<password>66cb51361af70b93ceb25c8092dac694d637f5ba6474d7dd46c76370a2c7163d</password>
+		<errorstring>INSERT INTO [ErrorTracking].[dbo].[ErrorXMLTransactions] ( ?COLUMNS? ) VALUES ( ?VALUES? )</errorstring>
+		<table>
+			<name>ErrorXMLTransactions</name>
+			<column>
+				<name>XMLPayload</name>
+				<specialvalue>XML</specialvalue>
+			</column>
+			<column>
+				<name>ID</name>
+				<lookup>transid</lookup>
+			</column>
+			<column>
+				<name>Error</name>
+				<specialvalue>ERROR</specialvalue>
+			</column>
+			<column>
+				<name>DataLoadDate</name>
+				<sql>GETDATE()</sql>
+			</column>
+			<clause>WHERE ID = '505243'</clause>
+		</table>
+	</errordatabase>
 	<database>
 		<servername>vaqa-dw-01</servername>
 		<databasename>PC_STAGING</databasename>
@@ -47,25 +76,6 @@
 			<key>accountid</key>
 			<xpath>//PolicyPeriod/Policy/Account/ID/Value</xpath>
 		</lookupfield>
-		<errorhandle>
-			<errorstring>INSERT INTO [ErrorTracking].[dbo].[ErrorXMLTransactions] ( ?COLUMNS? ) VALUES ( ?VALUES? )</errorstring>
-			<column>
-				<name>XMLPayload</name>
-				<specialvalue>XML</specialvalue>
-			</column>
-			<column>
-				<name>ID</name>
-				<lookup>transid</lookup>
-			</column>
-			<column>
-				<name>Error</name>
-				<specialvalue>ERROR</specialvalue>
-			</column>
-			<column>
-				<name>DataLoadDate</name>
-				<sql>GETDATE()</sql>
-			</column>
-		</errorhandle>
 		<table>
 			<name>PolicyPeriod</name>
 			<rootxpath>//PolicyPeriod</rootxpath>
