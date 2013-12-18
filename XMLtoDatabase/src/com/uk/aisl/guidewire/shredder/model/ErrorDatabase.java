@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.uk.aisl.guidewire.shredder.database.Loader;
+
 public class ErrorDatabase {
 
 	private static Logger logger = LogManager.getLogger(ErrorDatabase.class.getName());
@@ -21,7 +23,6 @@ public class ErrorDatabase {
 
 	public ErrorDatabase(Database database) {
 		this.database = database;
-		//this.columns = new ArrayList<Column>();
 	}
 	
 	public String getErrorSQLString(Exception e) {
@@ -30,10 +31,11 @@ public class ErrorDatabase {
 		StringBuffer values = new StringBuffer();
 		StringBuffer columnNames = new StringBuffer();
 		for (int i = 0; i < size; i++) {
-			if (i > 1) {
+			if (i > 0) {
 				values.append(",");
 				columnNames.append(",");
 			}
+			logger.info(i);
 			Column column = columns.get(i);
 			columnNames.append("[").append(column.getColumnName()).append("]");
 			String sqlString = column.getSql();
@@ -42,34 +44,32 @@ public class ErrorDatabase {
 				values.append(sqlString);
 				continue;
 			}
-			String specialValue = column.getLookUpKey();
+			String lookUpKey = column.getLookUpKey();
+			if (!(lookUpKey == null || lookUpKey.equals(""))) {
+				values.append(Loader.guessValueTypeNoComma(database.getLookUpValue(lookUpKey)));
+				continue;
+			}
+			String specialValue = column.getSpecialValue();
 			if (!(specialValue == null || specialValue.equals(""))) {
 				if (specialValue.equals("XML")) {
-					values.append(database.getXML());
+					values.append("'").append(database.getXML().replace("'", "''")).append("'");
 					continue;
 				}
 				if (specialValue.equals("ERROR")) {
-					values.append(e.getMessage()).append("\n\r");
+					values.append("'").append(e.getMessage().replace("'", "''")).append(": ");
 					StringWriter errors = new StringWriter();
 					e.printStackTrace(new PrintWriter(errors));
-					values.append(errors.toString());
+					values.append(errors.toString().replace("'", "''")).append("'");
 					continue;
 				}
 				values.append("null");
 				logger.error("SpecialValue look up failed (only XML & ERROR supported): " + specialValue);
 				continue;
 			}
-
-			String lookUpKey = column.getLookUpKey();
-			if (!(lookUpKey == null || lookUpKey.equals(""))) {
-				// Value should be look up value
-				values.append(database.getLookUpValue(lookUpKey));
-				continue;
-			}
 		}
 		//TODO change this to dynamic built.
 		StringBuffer buff = new StringBuffer();
-		buff.append("INSERT INTO [").append(database.getSchema()).append("].[").append(this.table.getName()).append("] (");
+		buff.append("INSERT INTO [").append(this.schema).append("].[").append(this.table.getName()).append("] (");
 		buff.append(columnNames.toString()).append(") VALUES (");
 		buff.append(values.toString()).append(")");
 		return buff.toString();

@@ -95,7 +95,7 @@ public class Loader {
 	 * @return The String of the correctly formed values to be used in the
 	 *         insert statement
 	 */
-	private static String guessValueType(String value) {
+	public static String guessValueType(String value) {
 		if (value == null) {
 			return "null,";
 		} else {
@@ -115,7 +115,38 @@ public class Loader {
 							if (value.equalsIgnoreCase("false")) {
 								return 0 + ",";
 							} else {
+								value = value.replace("'", "''");
 								return "'" + value + "',";
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public static String guessValueTypeNoComma(String value) {
+		if (value == null) {
+			return "null";
+		} else {
+			if (value.equals("")) {
+				return "null";
+			} else {
+				try {
+					Integer.parseInt(value);
+					return value;
+				} catch (NumberFormatException e) {
+					if (value.equals("null")) {
+						return "null";
+					} else {
+						if (value.equalsIgnoreCase("true")) {
+							return ""+1;
+						} else {
+							if (value.equalsIgnoreCase("false")) {
+								return ""+0;
+							} else {
+								value = value.replace("'", "''");
+								return "'" + value + "'";
 							}
 						}
 					}
@@ -310,7 +341,7 @@ public class Loader {
 		Connection conn = null;
 		PreparedStatement stmnt = null;
 		try {
-			conn = ConnectionManager.getTargetConnection(database);
+			conn = ConnectionManager.getErrorConnection(database);
 			conn.setAutoCommit(false);
 			String sqlCommand = database.getError().getErrorSQLString(e);
 			logger.debug(sqlCommand);

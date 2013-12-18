@@ -56,8 +56,8 @@ public class Shredder {
 				} catch (CrashException e) {
 					Loader.logError(database, e);
 				}
-				database.cleanDown();
 				logger.trace("Finished parsing payload xml for "+returnXML.getVariableMap().get("transid"));
+				database.cleanDown();
 			}
 		} catch (CrashException e) {
 			logger.fatal("Crash exception occured", e);

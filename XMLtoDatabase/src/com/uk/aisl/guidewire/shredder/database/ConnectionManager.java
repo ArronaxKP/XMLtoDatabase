@@ -83,6 +83,10 @@ public class ConnectionManager {
 	public static Connection getSourceConnection(Database database) throws SQLException {
 		return getInstance(database).sourceDatabase.getConnection();
 	}
+	
+	public static Connection getErrorConnection(Database database) throws SQLException {
+		return getInstance(database).errorDatabase.getConnection();
+	}
 
 	/**
 	 * Internal method used to setup the values for the target database.
