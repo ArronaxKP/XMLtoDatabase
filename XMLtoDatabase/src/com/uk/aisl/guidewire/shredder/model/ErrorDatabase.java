@@ -9,24 +9,30 @@ import org.apache.logging.log4j.Logger;
 
 import com.uk.aisl.guidewire.shredder.database.Loader;
 
-public class ErrorDatabase {
+public class ErrorDatabase extends SuperDatabase {
 
 	private static Logger logger = LogManager.getLogger(ErrorDatabase.class.getName());
-	private Database database;
-	private String databaseName;
-	private String serverName;
-	private String port;
-	private String schema;
-	private String username;
-	private String password;
-	private Table table;
 
-	public ErrorDatabase(Database database) {
+	private Database database;
+
+	/**
+	 * Links the error database to the database object
+	 * 
+	 * @param database
+	 *            The database object
+	 */
+	public void setDatabase(Database database) {
 		this.database = database;
 	}
-	
-	public String getErrorSQLString(Exception e) {
-		ArrayList<Column> columns = this.table.getColumns();
+
+	/**
+	 * Creates the error SQL string to insert into the error XML
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public String getErrorSQLString(Exception exception) {
+		ArrayList<Column> columns = this.getTable().getColumns();
 		int size = columns.size();
 		StringBuffer values = new StringBuffer();
 		StringBuffer columnNames = new StringBuffer();
@@ -35,7 +41,6 @@ public class ErrorDatabase {
 				values.append(",");
 				columnNames.append(",");
 			}
-			logger.info(i);
 			Column column = columns.get(i);
 			columnNames.append("[").append(column.getColumnName()).append("]");
 			String sqlString = column.getSql();
@@ -56,10 +61,14 @@ public class ErrorDatabase {
 					continue;
 				}
 				if (specialValue.equals("ERROR")) {
-					values.append("'").append(e.getMessage().replace("'", "''")).append(": ");
 					StringWriter errors = new StringWriter();
-					e.printStackTrace(new PrintWriter(errors));
-					values.append(errors.toString().replace("'", "''")).append("'");
+					exception.printStackTrace(new PrintWriter(errors));
+					String error = exception.getMessage() + ":" + errors.toString();
+					if (error.contains("duplicate key")) {
+						values.append("'").append("Duplicate Record").append("'");
+					} else {
+						values.append("'").append("Error Loading table").append("'");
+					}
 					continue;
 				}
 				values.append("null");
@@ -67,63 +76,11 @@ public class ErrorDatabase {
 				continue;
 			}
 		}
-		//TODO change this to dynamic built.
 		StringBuffer buff = new StringBuffer();
-		buff.append("INSERT INTO [").append(this.schema).append("].[").append(this.table.getName()).append("] (");
+		buff.append("INSERT INTO [" + this.databaseName + "].[").append(this.schema).append("].[")
+				.append(this.getTable().getName()).append("] (");
 		buff.append(columnNames.toString()).append(") VALUES (");
 		buff.append(values.toString()).append(")");
 		return buff.toString();
-	}
-	
-	public String getDatabaseName() {
-		return databaseName;
-	}
-
-	public void setDatabaseName(String databaseName) {
-		this.databaseName = databaseName;
-	}
-
-	public String getServerName() {
-		return serverName;
-	}
-
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
-	}
-
-	public String getPort() {
-		return port;
-	}
-
-	public void setPort(String port) {
-		this.port = port;
-	}
-
-	public String getSchema() {
-		return schema;
-	}
-
-	public void setSchema(String schema) {
-		this.schema = schema;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setTable(Table table) {
-		this.table = table;
 	}
 }

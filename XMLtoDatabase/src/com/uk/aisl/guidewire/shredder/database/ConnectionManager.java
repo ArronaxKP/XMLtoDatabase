@@ -10,8 +10,9 @@ import com.uk.aisl.guidewire.shredder.model.SourceDatabase;
 
 /**
  * Connection Manager wrapping class that uses singleton connections to obtain a
- * single connection to either the source (the database for the pay load XML) or
- * the target (the database the pay load will be written into) databases.
+ * single connection to either the source (the database for the pay load XML);
+ * the error (the database for the error logging) or the target (the database
+ * the pay load will be written into) databases.
  * 
  * @author Gareth Edwards
  * @author Karl Parry
@@ -30,7 +31,8 @@ public class ConnectionManager {
 	 * 
 	 * @param database
 	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
+	 *            information (source, error & target) and the destination
+	 *            values
 	 */
 	private ConnectionManager(Database database) {
 		this.setUpTargetDatabase(database);
@@ -43,7 +45,8 @@ public class ConnectionManager {
 	 * 
 	 * @param database
 	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
+	 *            information (source, error & target) and the destination
+	 *            values
 	 * @return The instantiated ConnectionManager
 	 */
 	private static ConnectionManager getInstance(Database database) {
@@ -59,7 +62,8 @@ public class ConnectionManager {
 	 * 
 	 * @param database
 	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
+	 *            information (source, error & target) and the destination
+	 *            values
 	 * @return The connection to the target Database
 	 * @throws SQLException
 	 *             Throws this execution if there was an issue getting the
@@ -68,13 +72,14 @@ public class ConnectionManager {
 	public static Connection getTargetConnection(Database database) throws SQLException {
 		return getInstance(database).targetDatabase.getConnection();
 	}
-	
+
 	/**
 	 * Gets the source database connection for getting the XML payload
 	 * 
 	 * @param database
 	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
+	 *            information (source, error & target) and the destination
+	 *            values
 	 * @return The connection to the source Database
 	 * @throws SQLException
 	 *             Throws this execution if there was an issue getting the
@@ -83,7 +88,19 @@ public class ConnectionManager {
 	public static Connection getSourceConnection(Database database) throws SQLException {
 		return getInstance(database).sourceDatabase.getConnection();
 	}
-	
+
+	/**
+	 * Gets the error database connection for writing the error logs
+	 * 
+	 * @param database
+	 *            The database wrapper object that wraps all database
+	 *            information (source, error & target) and the destination
+	 *            values
+	 * @return The connection to the error Database
+	 * @throws SQLException
+	 *             Throws this execution if there was an issue getting the
+	 *             connection
+	 */
 	public static Connection getErrorConnection(Database database) throws SQLException {
 		return getInstance(database).errorDatabase.getConnection();
 	}
@@ -93,7 +110,8 @@ public class ConnectionManager {
 	 * 
 	 * @param database
 	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
+	 *            information (source, error & target) and the destination
+	 *            values
 	 */
 	private void setUpTargetDatabase(Database database) {
 		targetDatabase.setServerName(database.getServerName());
@@ -107,7 +125,8 @@ public class ConnectionManager {
 	 * 
 	 * @param database
 	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
+	 *            information (source, error & target) and the destination
+	 *            values
 	 */
 	private void setUpSourceDatabase(SourceDatabase source) {
 		sourceDatabase.setServerName(source.getServerName());
@@ -115,14 +134,21 @@ public class ConnectionManager {
 		sourceDatabase.setUser(source.getUsername());
 		sourceDatabase.setPassword(source.getPassword());
 	}
-	
+
+	/**
+	 * Internal method used to setup the values for the error database.
+	 * 
+	 * @param database
+	 *            The database wrapper object that wraps all database
+	 *            information (source, error & target) and the destination
+	 *            values
+	 */
 	private void setUpSourceDatabase(ErrorDatabase error) {
 		errorDatabase.setServerName(error.getServerName());
 		errorDatabase.setDatabaseName(error.getDatabaseName());
 		errorDatabase.setUser(error.getUsername());
 		errorDatabase.setPassword(error.getPassword());
-		
+
 	}
-	
 
 }

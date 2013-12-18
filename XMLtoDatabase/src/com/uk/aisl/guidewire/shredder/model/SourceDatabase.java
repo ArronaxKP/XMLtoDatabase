@@ -1,73 +1,31 @@
 package com.uk.aisl.guidewire.shredder.model;
 
-public class SourceDatabase {
+import java.util.ArrayList;
 
-	private Table table;
-	private String databaseName;
-	private String serverName;
-	private String port;
-	private String schema;
-	private String username;
-	private String password;
+public class SourceDatabase extends SuperDatabase {
 
-	public SourceDatabase(){
-		this.table = new Table();
+	private Database database;
+	
+	public String getSourceSQLQuery(){
+		SourceDatabase source = database.getSource();
+		Table table = source.getTable();
+		ArrayList<Column> columns = table.getColumns();
+		StringBuffer buff = new StringBuffer();
+		buff.append("SELECT ").append(table.getSubset()).append(" ");
+		for (int i = 0; i < columns.size(); i++) {
+			if (i != 0) {
+				buff.append(", ");
+			}
+			buff.append(columns.get(i).getColumnName());
+		}
+		buff.append(" FROM [").append(source.getSchema()).append("].[").append(table.getName()).append("] ")
+				.append(table.getClause());
+		return buff.toString();
+	}
+
+	public void setDatabase(Database database) {
+		this.database = database;
+		
 	}
 	
-	public Table getTable() {
-		return table;
-	}
-
-	public void setTable(Table table) {
-		this.table = table;
-	}
-
-	public String getDatabaseName() {
-		return databaseName;
-	}
-
-	public void setDatabaseName(String databaseName) {
-		this.databaseName = databaseName;
-	}
-
-	public String getServerName() {
-		return serverName;
-	}
-
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
-	}
-
-	public String getPort() {
-		return port;
-	}
-
-	public void setPort(String port) {
-		this.port = port;
-	}
-
-	public String getSchema() {
-		return schema;
-	}
-
-	public void setSchema(String schema) {
-		this.schema = schema;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 }

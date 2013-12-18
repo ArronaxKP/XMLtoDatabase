@@ -17,71 +17,45 @@ import com.uk.aisl.guidewire.shredder.model.SourceDatabase;
 import com.uk.aisl.guidewire.shredder.model.Table;
 import com.uk.aisl.guidewire.shredder.model.XMLReturn;
 
-public class Loader {
+/**
+ * Abstract class that encompasses the SQL query, update and insert running
+ * 
+ * @author Gareth Edwards
+ * @author Karl Parry
+ *
+ */
+public abstract class Loader {
 
 	private static Logger logger = LogManager.getLogger(Loader.class.getName());
-	
+
 	/**
-	 * Creates the insert statements dynamically based on the structure and
-	 * order outlined in mapping.xml. <br/>
-	 * <br/>
-	 * This will correctly map the values to the column/table name and their
-	 * corresponding values
+	 * Method that attempts to guess the data type that needs to be inserted.
+	 * Depending on the data type different wrappers need to be used in the
+	 * insert statement.<br/>
+	 * Passes actually type checking to guessValueTypeNoComma(Value) method,
+	 * with the only differnce in the return is that this method returns a type
+	 * with a comma ',' at the end <br/>
+	 * Examples: <br/>
+	 * VARCHAR = 'Value'<br/>
+	 * Integer = 1 <br/>
+	 * Bit (True) = 1<br/>
+	 * Bit (False) = 0<br/>
+	 * Empty String ('') = null<br/>
+	 * null = null
 	 * 
-	 * @param database
-	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
-	 * @return A list of string insert statements
+	 * @param value
+	 *            The value that needs to be used to identify it's type.
+	 * @return The String of the correctly formed values to be used in the
+	 *         insert statement with a comma ',' at the end.
 	 */
-	private static ArrayList<String> createStatements(Database database) {
-
-		ArrayList<String> statements = new ArrayList<String>();
-		ArrayList<Table> tables = database.getTables();
-		StringBuffer buff = new StringBuffer();
-
-		for (Table t : tables) {
-			ArrayList<Column> columns = t.getColumns();
-			Column currentColumn = columns.get(0);
-			int numberOfRows = currentColumn.size();
-			if (numberOfRows == 0) {
-				continue;
-			}
-			buff.append("INSERT INTO [" + database.getSchema() + "].[" + t.getName() + "] (");
-
-			for (Column c : columns) {
-				buff.append("[" + c.getColumnName() + "],");
-			}
-			buff.deleteCharAt(buff.length() - 1);
-			buff.append(") VALUES ");
-
-			for (int row = 0; row < numberOfRows; row++) {
-				buff.append("(");
-
-				for (int columnCounter = 0; columnCounter < columns.size(); columnCounter++) {
-					Column column = columns.get(columnCounter);
-					if (column.getType() == null || column.getType().equals("")) {
-						buff.append(Loader.guessValueType(column.getValue(row)));
-					} else {
-						buff.append(column.getType().replace("?", "'" + column.getValue(row) + "'") + ",");
-					}
-				}
-				buff.deleteCharAt(buff.length() - 1);
-				buff.append("), ");
-			}
-			buff.deleteCharAt(buff.length() - 2);
-			statements.add(buff.toString());
-			buff.setLength(0);
-
-		}
-		return statements;
-
+	public static String guessValueType(String value) {
+		return Loader.guessValueTypeNoComma(value) + ",";
 	}
 
 	/**
 	 * Method that attempts to guess the data type that needs to be inserted.
 	 * Depending on the data type different wrappers need to be used in the
 	 * insert statement.<br/>
-	 * <br/>
 	 * Examples: <br/>
 	 * VARCHAR = 'Value'<br/>
 	 * Integer = 1 <br/>
@@ -95,36 +69,6 @@ public class Loader {
 	 * @return The String of the correctly formed values to be used in the
 	 *         insert statement
 	 */
-	public static String guessValueType(String value) {
-		if (value == null) {
-			return "null,";
-		} else {
-			if (value.equals("")) {
-				return "null,";
-			} else {
-				try {
-					Integer.parseInt(value);
-					return value + ",";
-				} catch (NumberFormatException e) {
-					if (value.equals("null")) {
-						return "null,";
-					} else {
-						if (value.equalsIgnoreCase("true")) {
-							return 1 + ",";
-						} else {
-							if (value.equalsIgnoreCase("false")) {
-								return 0 + ",";
-							} else {
-								value = value.replace("'", "''");
-								return "'" + value + "',";
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	
 	public static String guessValueTypeNoComma(String value) {
 		if (value == null) {
 			return "null";
@@ -140,10 +84,10 @@ public class Loader {
 						return "null";
 					} else {
 						if (value.equalsIgnoreCase("true")) {
-							return ""+1;
+							return "" + 1;
 						} else {
 							if (value.equalsIgnoreCase("false")) {
-								return ""+0;
+								return "" + 0;
 							} else {
 								value = value.replace("'", "''");
 								return "'" + value + "'";
@@ -161,7 +105,8 @@ public class Loader {
 	 * 
 	 * @param database
 	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
+	 *            information (source, error & target) and the destination
+	 *            values
 	 * @return The list of XMLReturn objects with their XML pay loads for
 	 *         parsing
 	 * @throws CrashException
@@ -173,24 +118,14 @@ public class Loader {
 		ResultSet rs = null;
 		try {
 			conn = ConnectionManager.getSourceConnection(database);
-			SourceDatabase source = database.getSource();
-			Table table = source.getTable();
-			ArrayList<Column> columns = table.getColumns();
-			StringBuffer buff = new StringBuffer();
-			buff.append("SELECT ");
-			for (int i = 0; i < columns.size(); i++) {
-				if (i != 0) {
-					buff.append(", ");
-				}
-				buff.append(columns.get(i).getColumnName());
-			}
-			buff.append(" FROM [" + source.getSchema() + "].[" + table.getName() + "] " + table.getClause());
-			logger.debug(buff.toString());
-			stmnt = conn.prepareStatement(buff.toString());
+			String sql = database.getSource().getSourceSQLQuery();
+			logger.debug(sql);
+			stmnt = conn.prepareStatement(sql);
 			rs = stmnt.executeQuery();
 			while (rs.next()) {
 				HashMap<String, String> variableMap = new HashMap<String, String>(97);
 				String xmlPayload = null;
+				ArrayList<Column> columns = database.getSource().getTable().getColumns();
 				for (int i = 0; i < columns.size(); i++) {
 					if (columns.get(i).getLookUpKey().equals("XML")) {
 						xmlPayload = rs.getString(i + 1);
@@ -210,17 +145,20 @@ public class Loader {
 			if (rs != null) {
 				try {
 					rs.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 			if (stmnt != null) {
 				try {
 					stmnt.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 			if (conn != null) {
 				try {
 					conn.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 
 		}
@@ -230,11 +168,17 @@ public class Loader {
 	/**
 	 * Method executes the statements created by the createStatement method.
 	 * This method also update the process date of the source XML pay load table
-	 * if it successfully inserted all records.
+	 * if it successfully inserted all records. <br/>
+	 * <br/>
+	 * This method also calls updateXMLTable(Database) if the insertion fails. <br/>
+	 * <br/>
+	 * If a single insert fails the entire method fails and no records are
+	 * inserted and all records are rolled back (not committed)
 	 * 
 	 * @param database
 	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
+	 *            information (source, error & target) and the destination
+	 *            values
 	 * @return True if inserting succeeded and update or else false
 	 * @throws CrashException
 	 */
@@ -245,7 +189,7 @@ public class Loader {
 		try {
 			conn = ConnectionManager.getTargetConnection(database);
 			conn.setAutoCommit(false);
-			ArrayList<String> statements = createStatements(database);
+			ArrayList<String> statements = database.createStatements();
 			for (String s : statements) {
 				logger.debug(s);
 				stmnt = conn.prepareStatement(s);
@@ -277,25 +221,30 @@ public class Loader {
 			if (stmnt != null) {
 				try {
 					stmnt.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 			if (conn != null) {
 				try {
 					conn.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 		}
 	}
 
 	/**
-	 * Updates the source table with process date = getDate() SQL method.
+	 * Updates the source table with process date = getDate() SQL method. This
+	 * method could be made dynamic if desired to be similar to the methods
+	 * above
 	 * 
 	 * @param database
 	 *            The database wrapper object that wraps all database
-	 *            information (source & target) and the destination values
+	 *            information (source, error & target) and the destination
+	 *            values
 	 * @throws CrashException
 	 */
-	private static boolean updateXMLTable(Database database) {
+	private static boolean updateXMLTable(Database database) throws CrashException {
 		boolean success = false;
 		Connection conn = null;
 		PreparedStatement stmnt = null;
@@ -306,9 +255,9 @@ public class Loader {
 			StringBuffer buff = new StringBuffer();
 			buff.append("Update " + "[" + source.getSchema() + "].");
 			buff.append("[" + source.getTable().getName() + "] SET ");
-			buff.append("[EDWProcessTime] = getDate() WHERE TransID = \"");
+			buff.append("[EDWProcessTime] = getDate() WHERE ID = '");
 			buff.append(database.getLookUpValue("TransID"));
-			buff.append("\"");
+			buff.append("'");
 			stmnt = conn.prepareStatement(buff.toString());
 			int rowsAffected = stmnt.executeUpdate();
 			if (rowsAffected == 1) {
@@ -320,23 +269,35 @@ public class Loader {
 			stmnt.close();
 			conn.close();
 		} catch (SQLException e) {
-			logger.error("Failed to update the record after a successful update", e);
+			throw new CrashException("Insert was a success but update process date failed: "
+					+ database.getLookUpValue("TransID"), e);
 		} finally {
 			if (stmnt != null) {
 				try {
 					stmnt.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 			if (conn != null) {
 				try {
 					conn.close();
-				} catch (SQLException e) {}
+				} catch (SQLException e) {
+				}
 			}
 
 		}
 		return success;
 	}
 
+	/**
+	 * This is the method that writes the error logs to the Database.
+	 * 
+	 * @param database
+	 *            The database wrapper object that wraps all database
+	 *            information (source, error & target) and the destination
+	 *            values
+	 * @throws CrashException
+	 */
 	public static void logError(Database database, CrashException e) {
 		Connection conn = null;
 		PreparedStatement stmnt = null;
@@ -348,24 +309,29 @@ public class Loader {
 			stmnt = conn.prepareStatement(sqlCommand);
 			int rowCount = stmnt.executeUpdate();
 			if (rowCount != 1) {
-				String ID = database.getLookUpValue("transid");
-				logger.fatal("Failed to add error entry. TransID = "+ID);
+				conn.rollback();
+				String ID = database.getLookUpValue("TransID");
+				logger.fatal("Failed to add error entry. TransID = " + ID);
 			} else {
 				conn.commit();
+				String ID = database.getLookUpValue("TransID");
+				logger.fatal("Error wrote to database. TransID = " + ID);
 			}
 		} catch (SQLException ex) {
-			String ID = database.getLookUpValue("transid");
-			logger.fatal("Failed to add error entry. TransID = "+ID, ex);
+			String ID = database.getLookUpValue("TransID");
+			logger.fatal("Failed to add error entry. TransID = " + ID, ex);
 		} finally {
 			if (stmnt != null) {
 				try {
 					stmnt.close();
-				} catch (SQLException ex) {}
+				} catch (SQLException ex) {
+				}
 			}
 			if (conn != null) {
 				try {
 					conn.close();
-				} catch (SQLException ex) {}
+				} catch (SQLException ex) {
+				}
 			}
 		}
 

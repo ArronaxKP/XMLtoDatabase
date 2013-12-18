@@ -8,6 +8,7 @@ public class Table {
 	private String xpathROOT;
 	private ArrayList<Column> columns;
 	private String clause;
+	private String subset;
 
 	public Table() {
 		this.columns = new ArrayList<Column>();
@@ -49,5 +50,13 @@ public class Table {
 
 	public void setClause(String clause) {
 		this.clause = clause;
+	}
+
+	public String getSubset() {
+		return subset;
+	}
+	
+	public void setSubset(String subset) {
+		this.subset = subset;
 	}
 }
