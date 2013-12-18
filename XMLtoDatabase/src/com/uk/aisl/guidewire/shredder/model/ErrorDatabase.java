@@ -4,10 +4,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 
-import com.uk.aisl.guidewire.shredder.exception.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class ErrorDatabase {
 
+	private static Logger logger = LogManager.getLogger(ErrorDatabase.class.getName());
 	private Database database;
 	private String databaseName;
 	private String serverName;
@@ -54,7 +56,7 @@ public class ErrorDatabase {
 					continue;
 				}
 				values.append("null");
-				Logger.error("SpecialValue look up failed (only XML & ERROR supported): " + specialValue);
+				logger.error("SpecialValue look up failed (only XML & ERROR supported): " + specialValue);
 				continue;
 			}
 

@@ -7,8 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
-import com.uk.aisl.guidewire.shredder.exception.Logger;
 import com.uk.aisl.guidewire.shredder.model.Column;
 import com.uk.aisl.guidewire.shredder.model.Database;
 import com.uk.aisl.guidewire.shredder.model.SourceDatabase;
@@ -17,6 +19,8 @@ import com.uk.aisl.guidewire.shredder.model.XMLReturn;
 
 public class Loader {
 
+	private static Logger logger = LogManager.getLogger(Loader.class.getName());
+	
 	/**
 	 * Creates the insert statements dynamically based on the structure and
 	 * order outlined in mapping.xml. <br/>
@@ -150,7 +154,7 @@ public class Loader {
 				buff.append(columns.get(i).getColumnName());
 			}
 			buff.append(" FROM [" + source.getSchema() + "].[" + table.getName() + "] " + table.getClause());
-			Logger.debug(buff.toString());
+			logger.debug(buff.toString());
 			stmnt = conn.prepareStatement(buff.toString());
 			rs = stmnt.executeQuery();
 			while (rs.next()) {
@@ -212,7 +216,7 @@ public class Loader {
 			conn.setAutoCommit(false);
 			ArrayList<String> statements = createStatements(database);
 			for (String s : statements) {
-				Logger.debug(s);
+				logger.debug(s);
 				stmnt = conn.prepareStatement(s);
 				try {
 					int rowCount = stmnt.executeUpdate();
@@ -285,7 +289,7 @@ public class Loader {
 			stmnt.close();
 			conn.close();
 		} catch (SQLException e) {
-			Logger.error("Failed to update the record after a successful update", e);
+			logger.error("Failed to update the record after a successful update", e);
 		} finally {
 			if (stmnt != null) {
 				try {
@@ -309,18 +313,18 @@ public class Loader {
 			conn = ConnectionManager.getTargetConnection(database);
 			conn.setAutoCommit(false);
 			String sqlCommand = database.getError().getErrorSQLString(e);
-			Logger.debug(sqlCommand);
+			logger.debug(sqlCommand);
 			stmnt = conn.prepareStatement(sqlCommand);
 			int rowCount = stmnt.executeUpdate();
 			if (rowCount != 1) {
 				String ID = database.getLookUpValue("transid");
-				Logger.superError("Failed to add error entry. TransID = "+ID);
+				logger.fatal("Failed to add error entry. TransID = "+ID);
 			} else {
 				conn.commit();
 			}
 		} catch (SQLException ex) {
 			String ID = database.getLookUpValue("transid");
-			Logger.superError("Failed to add error entry. TransID = "+ID, ex);
+			logger.fatal("Failed to add error entry. TransID = "+ID, ex);
 		} finally {
 			if (stmnt != null) {
 				try {

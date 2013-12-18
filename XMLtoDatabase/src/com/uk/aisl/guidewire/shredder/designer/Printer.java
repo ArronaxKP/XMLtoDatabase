@@ -1,9 +1,10 @@
 package com.uk.aisl.guidewire.shredder.designer;
 
-import com.uk.aisl.guidewire.shredder.exception.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Printer {
-
+	private static Logger logger = LogManager.getLogger(Printer.class.getName());
 	/**
 	 * The most important part of the entire project is this class. It was hand
 	 * crafter by the Welsh men hereby known as Shredder's Minions. <br/>
@@ -12,7 +13,7 @@ public class Printer {
 	 * single execution log.
 	 */
 	public static void printTheShredder() {
-		Logger.info("                                                               " + System.lineSeparator()
+		logger.info("                                                               " + System.lineSeparator()
 				+ "                THE SHREDDER RETURNS IN                                 " + System.lineSeparator()
 				+ "             Teenage Mutant Ninja Turtles:                              " + System.lineSeparator()
 				+ "                      XM-HELL                                           " + System.lineSeparator()

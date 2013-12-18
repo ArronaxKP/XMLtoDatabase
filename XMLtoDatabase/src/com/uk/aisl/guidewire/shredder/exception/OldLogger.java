@@ -1,6 +1,6 @@
 package com.uk.aisl.guidewire.shredder.exception;
 
-public class Logger {
+public class OldLogger {
 	
 	public static void info(String message) {
 		System.out.println("INFO : "+message);

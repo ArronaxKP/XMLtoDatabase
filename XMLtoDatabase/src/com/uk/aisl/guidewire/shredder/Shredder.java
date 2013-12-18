@@ -2,10 +2,12 @@ package com.uk.aisl.guidewire.shredder;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.uk.aisl.guidewire.shredder.database.Loader;
 import com.uk.aisl.guidewire.shredder.designer.Printer;
 import com.uk.aisl.guidewire.shredder.exception.CrashException;
-import com.uk.aisl.guidewire.shredder.exception.Logger;
 import com.uk.aisl.guidewire.shredder.model.Database;
 import com.uk.aisl.guidewire.shredder.model.XMLReturn;
 import com.uk.aisl.guidewire.shredder.xml.MapperXML;
@@ -20,7 +22,7 @@ import com.uk.aisl.guidewire.shredder.xml.Parser;
  * 
  */
 public class Shredder {
-
+	private static Logger logger = LogManager.getLogger(Shredder.class.getName());
 	/**
 	 * Main method that starts the shredder. The Shredder is designed to read
 	 * the mapping.xml file (located at the same root directory as the jar) and
@@ -38,14 +40,14 @@ public class Shredder {
 		long start = System.currentTimeMillis();
 		Database database = null;
 		try {
-			Logger.info("Beginning parsing mapping.xml");
+			logger.trace("Beginning parsing mapping.xml");
 			database = MapperXML.parseMapperXML("mapping.xml");
-			Logger.info("Finished parsing mapping.xml");
-			Logger.info("Beginning to get payload xml from Database");
+			logger.trace("Finished parsing mapping.xml");
+			logger.trace("Beginning to get payload xml from Database");
 			ArrayList<XMLReturn> list = Loader.getXML(database);
-			Logger.info("Finished getting payload xml from Database");
+			logger.trace("Finished getting payload xml from Database");
 			for (XMLReturn returnXML : list) {
-				Logger.info("Beginning parsing payload xml for "+returnXML.getVariableMap().get("transid"));
+				logger.trace("Beginning parsing payload xml for "+returnXML.getVariableMap().get("transid"));
 				try{
 					database.setXML(returnXML);
 					Parser parser = new Parser(returnXML.getXmlPayload());
@@ -55,17 +57,17 @@ public class Shredder {
 					Loader.logError(database, e);
 				}
 				database.cleanDown();
-				Logger.info("Finished parsing payload xml for "+returnXML.getVariableMap().get("transid"));
+				logger.trace("Finished parsing payload xml for "+returnXML.getVariableMap().get("transid"));
 			}
 		} catch (CrashException e) {
-			Logger.crash("Crash exception occured", e);
+			logger.fatal("Crash exception occured", e);
 			System.exit(1);
 		} catch (Exception e) {
-			Logger.crash("Unknown Error occurred", e);
+			logger.fatal("Unknown Error occurred", e);
 			System.exit(1);
 		}
 		long end = System.currentTimeMillis();
-		Logger.info("Job ended in: " + (end - start) + " ms");
+		logger.trace("Job ended in: " + (end - start) + " ms");
 		System.exit(0);
 	}
 }
