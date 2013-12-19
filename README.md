@@ -70,6 +70,7 @@ All three databases also have the following Route Elements: -
 <username> The username to access the database. (1)
 <password> The password for the username to access the database. (1)
 
+
 4.1. Database (Main Insert Database)
 ------------------------------------
 
@@ -92,6 +93,7 @@ The Column has the following elements: -
 <lookup> This is the key that is used to get the column's value from the look up list e.g. TransID. (0..1)
 <type> Is the SQL used to cast the object to the correct data type. It will replace the ? in the String with the value from the xpath. e.g. CAST ('?' AS DATETIME) will be written in the SQL as CAST('01 01 01T12345' AS DATETME) (0..1)
 
+
 4.2. Error Database
 -------------------
 
@@ -107,6 +109,7 @@ The Column has the following elements: -
 <lookup> This is the key that is used to get the column's value from the look up list e.g. TransID. (0..1)
 <sql> Is the Specific SQL command that will be inserted as the value for that column
 <specialvalue> This is a special value that corresponds specifically with internal working. XML is the XML pay load and ERROR is the error message. These will be written as the value of the table. (0..1)
+
 
 4.3. Source Database
 --------------------
