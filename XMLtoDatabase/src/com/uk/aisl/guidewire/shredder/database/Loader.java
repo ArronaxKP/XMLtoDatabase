@@ -14,7 +14,6 @@ import com.uk.aisl.guidewire.shredder.exception.CrashException;
 import com.uk.aisl.guidewire.shredder.model.Column;
 import com.uk.aisl.guidewire.shredder.model.Database;
 import com.uk.aisl.guidewire.shredder.model.SourceDatabase;
-import com.uk.aisl.guidewire.shredder.model.Table;
 import com.uk.aisl.guidewire.shredder.model.XMLReturn;
 
 /**

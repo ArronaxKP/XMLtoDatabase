@@ -9,6 +9,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.uk.aisl.guidewire.shredder.database.Loader;
 
+/**
+ * The ErrorDatabase wrapping object
+ * 
+ * @author Karl Parry
+ *
+ */
 public class ErrorDatabase extends SuperDatabase {
 
 	private static Logger logger = LogManager.getLogger(ErrorDatabase.class.getName());
