@@ -7,7 +7,6 @@ public abstract class SuperDatabase {
 	protected ArrayList<Table> tables;
 	protected String databaseName;
 	protected String serverName;
-	protected String port;
 	protected String schema;
 	protected String username;
 	protected String password;
@@ -30,14 +29,6 @@ public abstract class SuperDatabase {
 
 	public void setServerName(String serverName) {
 		this.serverName = serverName;
-	}
-
-	public String getPort() {
-		return port;
-	}
-
-	public void setPort(String port) {
-		this.port = port;
 	}
 
 	public String getSchema() {

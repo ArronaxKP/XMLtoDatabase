@@ -3,7 +3,6 @@
 	<sourcedatabase>
 		<servername>vaqa-sql-05\pc_qa</servername>
 		<databasename>PC_QA_TRANS</databasename>
-		<port>1433</port>
 		<schema>dbo</schema>
 		<username>pcUser</username>
 		<password>pc</password>
@@ -28,7 +27,6 @@
 	<errordatabase>
 		<servername>vaqa-dw-01</servername>
 		<databasename>ErrorTracking</databasename>
-		<port>1433</port>
 		<schema>dbo</schema>
 		<username>SSIS_PC_Staging</username>
 		<password>66cb51361af70b93ceb25c8092dac694d637f5ba6474d7dd46c76370a2c7163d</password>
@@ -55,7 +53,6 @@
 	<database>
 		<servername>vaqa-dw-01</servername>
 		<databasename>PC_STAGING</databasename>
-		<port>1433</port>
 		<schema>Quotes</schema>
 		<username>SSIS_PC_Staging</username>
 		<password>66cb51361af70b93ceb25c8092dac694d637f5ba6474d7dd46c76370a2c7163d</password>

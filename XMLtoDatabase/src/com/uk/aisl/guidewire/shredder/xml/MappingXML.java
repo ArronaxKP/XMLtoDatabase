@@ -94,12 +94,6 @@ public abstract class MappingXML {
 		errorDatabase.setDatabaseName(apDBName.evalXPathToString());
 		apDBName.resetXPath();
 
-		AutoPilot apDBPort = new AutoPilot();
-		apDBPort.selectXPath("//shredder/errordatabase/port");
-		apDBPort.bind(vn);
-		errorDatabase.setPort(apDBPort.evalXPathToString());
-		apDBPort.resetXPath();
-
 		AutoPilot apServerName = new AutoPilot();
 		apServerName.selectXPath("//shredder/errordatabase/servername");
 		apServerName.bind(vn);
@@ -187,12 +181,6 @@ public abstract class MappingXML {
 		source.setDatabaseName(apDBName.evalXPathToString());
 		apDBName.resetXPath();
 
-		AutoPilot apDBPort = new AutoPilot();
-		apDBPort.selectXPath("//shredder/sourcedatabase/port");
-		apDBPort.bind(vn);
-		source.setPort(apDBPort.evalXPathToString());
-		apDBPort.resetXPath();
-
 		AutoPilot apServerName = new AutoPilot();
 		apServerName.selectXPath("//shredder/sourcedatabase/servername");
 		apServerName.bind(vn);
@@ -277,12 +265,6 @@ public abstract class MappingXML {
 		apDBName.bind(vn);
 		database.setDatabaseName(apDBName.evalXPathToString());
 		apDBName.resetXPath();
-
-		AutoPilot apDBPort = new AutoPilot();
-		apDBPort.selectXPath("//shredder/database/port");
-		apDBPort.bind(vn);
-		database.setPort(apDBPort.evalXPathToString());
-		apDBPort.resetXPath();
 
 		AutoPilot apServerName = new AutoPilot();
 		apServerName.selectXPath("//shredder/database/servername");
