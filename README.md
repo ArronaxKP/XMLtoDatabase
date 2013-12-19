@@ -4,10 +4,10 @@ Content
 2. How do you use this application
 3. Logs & Debugging
 4. Mapping.xml - The basic structure
-4.1. Database (Main Insert Database)
-4.2. Error Database
-4.3. Source Database
-5. Example XML
+5. Database (Main Insert Database)
+6. Error Database
+7. Source Database
+8. Example XML
 
 
 1. XMLtoDatabase
@@ -46,7 +46,6 @@ If an error occurs with a specific XML and you are unable to find the issue the 
 3. Then run the application in debug mode (-X flag) this will make the application output all the insert statements and more detailed reporting. 
 4. Using this output you can then find the cause of the issue. (In the early days this may require some code changes).  
 
-
 The full debug command with the -X flag: -
 
 java -jar Shredder.jar -X
@@ -71,7 +70,7 @@ All three databases also have the following Route Elements: -
 <password> The password for the username to access the database. (1)
 
 
-4.1. Database (Main Insert Database)
+5. Database (Main Insert Database)
 ------------------------------------
 
 The Core Database also has: -
@@ -94,7 +93,7 @@ The Column has the following elements: -
 <type> Is the SQL used to cast the object to the correct data type. It will replace the ? in the String with the value from the xpath. e.g. CAST ('?' AS DATETIME) will be written in the SQL as CAST('01 01 01T12345' AS DATETME) (0..1)
 
 
-4.2. Error Database
+6. Error Database
 -------------------
 
 The Error database has: -
@@ -111,7 +110,7 @@ The Column has the following elements: -
 <specialvalue> This is a special value that corresponds specifically with internal working. XML is the XML pay load and ERROR is the error message. These will be written as the value of the table. (0..1)
 
 
-4.3. Source Database
+7. Source Database
 --------------------
 
 The Source database has the following elements: -
@@ -128,7 +127,7 @@ Each column can have the following values: -
 <clause> The add a clause to the end of the statemtne e.g. WHERE ID = '1'. This is inserted at the end of the select statement e.g. SELECT ColumnName FROM TableName ** HERE ** 
 
 
-5. Example XML
+8. Example XML
 ==============
 
 <?xml version="1.0" encoding="UTF-8"?>
