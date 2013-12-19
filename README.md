@@ -71,7 +71,7 @@ All three databases also have the following Route Elements: -
 <password> The password for the username to access the database. (1)
 
 4.1. Database (Main Insert Database)
-====================================
+------------------------------------
 
 The Core Database also has: -
 <table> This is the table for the XML values to be written into (1..*)
@@ -93,7 +93,7 @@ The Column has the following elements: -
 <type> Is the SQL used to cast the object to the correct data type. It will replace the ? in the String with the value from the xpath. e.g. CAST ('?' AS DATETIME) will be written in the SQL as CAST('01 01 01T12345' AS DATETME) (0..1)
 
 4.2. Error Database
-===================
+-------------------
 
 The Error database has: -
 <table> This is the table for the error's to be written into (1)
@@ -109,7 +109,7 @@ The Column has the following elements: -
 <specialvalue> This is a special value that corresponds specifically with internal working. XML is the XML pay load and ERROR is the error message. These will be written as the value of the table. (0..1)
 
 4.3. Source Database
-====================
+--------------------
 
 The Source database has the following elements: -
 <table> The table name for the XML pay load to be retrieved from (1)
