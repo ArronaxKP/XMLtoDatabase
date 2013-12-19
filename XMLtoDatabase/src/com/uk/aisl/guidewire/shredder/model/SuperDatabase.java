@@ -2,6 +2,13 @@ package com.uk.aisl.guidewire.shredder.model;
 
 import java.util.ArrayList;
 
+/**
+ * Super object that wraps common elements from the tables into a single object
+ * to make it easier to maintain
+ * 
+ * @author Karl Parry
+ * 
+ */
 public abstract class SuperDatabase {
 
 	protected ArrayList<Table> tables;
@@ -11,10 +18,10 @@ public abstract class SuperDatabase {
 	protected String username;
 	protected String password;
 
-	public SuperDatabase(){
+	public SuperDatabase() {
 		this.tables = new ArrayList<Table>();
 	}
-	
+
 	public String getDatabaseName() {
 		return databaseName;
 	}
@@ -62,13 +69,13 @@ public abstract class SuperDatabase {
 	public void setTables(ArrayList<Table> tables) {
 		this.tables = tables;
 	}
-	
+
 	public void addTable(Table table) {
 		this.tables.add(table);
 	}
-	
-	public Table getTable(){
-		if(tables.size()>0){
+
+	public Table getTable() {
+		if (tables.size() > 0) {
 			return this.tables.get(0);
 		} else {
 			return null;

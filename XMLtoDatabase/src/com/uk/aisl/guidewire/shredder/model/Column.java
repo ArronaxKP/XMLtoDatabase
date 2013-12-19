@@ -179,7 +179,7 @@ public class Column {
 	 * This is the special value that is used for error handling. Only XML and
 	 * ERROR values are currently supported.
 	 * 
-	 * @return
+	 * @return Returns the Special Value either XML or ERROR
 	 */
 	public String getSpecialValue() {
 		return specialValue;

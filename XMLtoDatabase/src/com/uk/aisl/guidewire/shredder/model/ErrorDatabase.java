@@ -34,8 +34,8 @@ public class ErrorDatabase extends SuperDatabase {
 	/**
 	 * Creates the error SQL string to insert into the error XML
 	 * 
-	 * @param e
-	 * @return
+	 * @param exception
+	 * @return The SQL String to insert into the Error database.
 	 */
 	public String getErrorSQLString(Exception exception) {
 		ArrayList<Column> columns = this.getTable().getColumns();

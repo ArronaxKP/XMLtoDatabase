@@ -2,8 +2,15 @@ package com.uk.aisl.guidewire.shredder.model;
 
 import java.util.ArrayList;
 
+/**
+ * Wraps all the information relating to a table that can be used by the source,
+ * error and core database.
+ * 
+ * @author Karl Parry
+ * 
+ */
 public class Table {
-	
+
 	private String tableName;
 	private String xpathROOT;
 	private ArrayList<Column> columns;
@@ -33,13 +40,13 @@ public class Table {
 	public void addColumn(Column column) {
 		this.columns.add(column);
 	}
-	
-	public ArrayList<Column> getColumns(){
+
+	public ArrayList<Column> getColumns() {
 		return this.columns;
 	}
 
 	public void cleanDown() {
-		for(Column column: this.columns) {
+		for (Column column : this.columns) {
 			column.cleanDown();
 		}
 	}
@@ -55,7 +62,7 @@ public class Table {
 	public String getSubset() {
 		return subset;
 	}
-	
+
 	public void setSubset(String subset) {
 		this.subset = subset;
 	}

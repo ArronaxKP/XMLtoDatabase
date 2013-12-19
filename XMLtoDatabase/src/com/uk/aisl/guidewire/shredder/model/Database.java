@@ -169,7 +169,7 @@ public class Database extends SuperDatabase {
 	/**
 	 * Get the XML in a string form.
 	 * 
-	 * @return
+	 * @return Returns the XML Pay load
 	 */
 	public String getXML() {
 		return XML;
@@ -182,10 +182,6 @@ public class Database extends SuperDatabase {
 	 * This will correctly map the values to the column/table name and their
 	 * corresponding values
 	 * 
-	 * @param database
-	 *            The database wrapper object that wraps all database
-	 *            information (source, error & target) and the destination
-	 *            values
 	 * @return A list of string insert statements
 	 */
 	public ArrayList<String> createStatements() {

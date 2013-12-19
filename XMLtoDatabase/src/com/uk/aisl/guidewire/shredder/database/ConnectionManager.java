@@ -123,10 +123,8 @@ public class ConnectionManager {
 	/**
 	 * Internal method used to setup the values for the source database.
 	 * 
-	 * @param database
-	 *            The database wrapper object that wraps all database
-	 *            information (source, error & target) and the destination
-	 *            values
+	 * @param source
+	 *            The database wrapper object that wraps source information
 	 */
 	private void setUpSourceDatabase(SourceDatabase source) {
 		sourceDatabase.setServerName(source.getServerName());
@@ -138,10 +136,9 @@ public class ConnectionManager {
 	/**
 	 * Internal method used to setup the values for the error database.
 	 * 
-	 * @param database
-	 *            The database wrapper object that wraps all database
-	 *            information (source, error & target) and the destination
-	 *            values
+	 * @param error
+	 *            The database wrapper object that wraps error database
+	 *            information
 	 */
 	private void setUpSourceDatabase(ErrorDatabase error) {
 		errorDatabase.setServerName(error.getServerName());

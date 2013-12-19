@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shredder>
+	<sourcedatabase>
+		<servername>ServerName</servername>
+		<databasename>DatabaseName</databasename>
+		<schema>Schema</schema>
+		<username>USERNAME</username>
+		<password>PASSW0RD</password>
+		<table>
+			<name>Table Name</name>
+			<column>
+				<name>Column Name</name>
+				<variablelookupkey>The variable key that will be referenced in database</variablelookupkey>
+			</column>
+			<subset>Subset the select statements result e.g. TOP 1</subset>
+			<clause>The clause used to select values e.g. WHERE ID = '505243'</clause>
+		</table>
+	</sourcedatabase>
+	<errordatabase>
+		<servername>ServerName</servername>
+		<databasename>DatabaseName</databasename>
+		<schema>Schema</schema>
+		<username>USERNAME</username>
+		<password>PASSW0RD</password>
+		<table>
+			<name>Table Name</name>
+			<column>
+				<name>Column Name</name>
+				<specialvalue>XML</specialvalue> <!-- Used to place the XML pay load into a column -->
+			</column>
+			<column>
+				<name>Column Name</name>
+				<lookup>LookUp Key</lookup>
+			</column>
+			<column>
+				<name>Column Name</name>
+				<specialvalue>ERROR</specialvalue> <!-- Used to place the error message into a column` -->
+			</column>
+			<column>
+				<name>Column Name</name>
+				<sql>SQL Command for column value</sql>
+			</column>
+		</table>
+	</errordatabase>
+	<database>
+		<servername>ServerName</servername>
+		<databasename>DatabaseName</databasename>
+		<schema>Schema</schema>
+		<username>USERNAME</username>
+		<password>PASSW0RD</password>
+		<lookupfield>
+			<key>LookUp Key</key>
+			<variable>Variable name defined in Source Database</variable>
+		</lookupfield>
+		<lookupfield>
+			<key>LookUp Key</key>
+			<xpath>Xpath From Document ROOT</xpath>
+		</lookupfield>
+		<table>
+			<name>Table Name</name>
+			<rootxpath>//XPATH</rootxpath>
+			<column>
+				<name>ColumnName</name>
+				<lookup>LookUp Key</lookup>
+			</column>
+			<column>
+				<name>Column Name</name>
+				<xpath>(Xpath From Table ROOT)[1]</xpath>
+			</column>
+		</table>
+	</database>
+</shredder>

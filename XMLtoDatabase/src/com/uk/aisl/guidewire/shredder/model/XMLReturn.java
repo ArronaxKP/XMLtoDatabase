@@ -2,6 +2,12 @@ package com.uk.aisl.guidewire.shredder.model;
 
 import java.util.HashMap;
 
+/**
+ * Wraps the XML pay load along with the other select values from the source database.
+ * 
+ * @author Karl Parry
+ *
+ */
 public class XMLReturn {
 	
 	private String xmlPayload;

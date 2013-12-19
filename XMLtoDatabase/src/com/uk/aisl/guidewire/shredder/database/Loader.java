@@ -178,7 +178,6 @@ public abstract class Loader {
 	 *            The database wrapper object that wraps all database
 	 *            information (source, error & target) and the destination
 	 *            values
-	 * @return True if inserting succeeded and update or else false
 	 * @throws CrashException
 	 */
 	public static void insertToStaging(Database database) throws CrashException {

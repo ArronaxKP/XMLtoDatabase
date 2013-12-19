@@ -51,7 +51,7 @@ public class LookUp {
 	/**
 	 * Gets the value
 	 * 
-	 * @returnv The value
+	 * @return The value
 	 */
 	public String getValue() {
 		return value;
@@ -70,7 +70,7 @@ public class LookUp {
 	/**
 	 * Gets the variable from the Database Look up
 	 * 
-	 * @returnv The variable
+	 * @return The variable
 	 */
 	public String getVariable() {
 		return variable;
